@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "388271272219",
+    "project_id": "reflection-bda9a",
+    "storage_bucket": "reflection-bda9a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:388271272219:android:15717a6d81accc1472e3be",
+        "android_client_info": {
+          "package_name": "com.zulunity.reflection"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdr5hJG5LYhHSQAshMW627ttrW0U2Ez0w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
