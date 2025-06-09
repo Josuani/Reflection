@@ -104,8 +104,8 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               builder: (context, state) => PerfilWidget(),
             ),
             GoRoute(
-              path: MisionesWidget.routePath.substring(1),
-              builder: (context, state) => MisionesWidget(),
+              path: Misiones2Widget.routePath.substring(1),
+              builder: (context, state) => Misiones2Widget(),
             ),
           ],
         ) as RouteBase,

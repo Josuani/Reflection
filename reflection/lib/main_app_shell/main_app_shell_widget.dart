@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '/pages/home_page/home_page_widget.dart';
-import '/pages/misiones/misiones_widget.dart';
+import '/pages/misiones2/misiones2_widget.dart';
 import '/pages/perfil/perfil_widget.dart';
 
 class MainAppShellWidget extends StatefulWidget {
@@ -17,7 +17,7 @@ class _MainAppShellWidgetState extends State<MainAppShellWidget> {
   // List of pages to display directly
   final List<Widget> _pages = [
     HomePageWidget(),
-    MisionesWidget(),
+    Misiones2Widget(),
     PerfilWidget(),
   ];
 
@@ -31,7 +31,7 @@ class _MainAppShellWidgetState extends State<MainAppShellWidget> {
         context.go('/app/home');
         break;
       case 1:
-        context.go('/app/misiones');
+        context.go('/app/misiones2');
         break;
       case 2:
         context.go('/app/perfil');
@@ -41,7 +41,7 @@ class _MainAppShellWidgetState extends State<MainAppShellWidget> {
 
   // Method to get the current index based on the route
   int _getCurrentIndex(String path) {
-    if (path.startsWith('/app/misiones')) return 1;
+    if (path.startsWith('/app/misiones2')) return 1;
     if (path.startsWith('/app/perfil')) return 2;
     return 0; // Default to Home
   }

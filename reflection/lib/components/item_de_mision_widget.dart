@@ -11,7 +11,16 @@ export 'item_de_mision_model.dart';
 /// la idea de este componente es reutilizarlo en donde se necesite llamar una
 /// mision
 class ItemDeMisionWidget extends StatefulWidget {
-  const ItemDeMisionWidget({super.key});
+  final Map<String, dynamic> mission;
+  final Function(String, String) onChangeStatus;
+  final Function(String) onDelete;
+
+  const ItemDeMisionWidget({
+    super.key,
+    required this.mission,
+    required this.onChangeStatus,
+    required this.onDelete,
+  });
 
   @override
   State<ItemDeMisionWidget> createState() => _ItemDeMisionWidgetState();
@@ -21,191 +30,149 @@ class _ItemDeMisionWidgetState extends State<ItemDeMisionWidget> {
   late ItemDeMisionModel _model;
 
   @override
-  void setState(VoidCallback callback) {
-    super.setState(callback);
-    _model.onUpdate();
-  }
-
-  @override
   void initState() {
     super.initState();
     _model = createModel(context, () => ItemDeMisionModel());
-
-    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
   void dispose() {
-    _model.maybeDispose();
-
+    _model.dispose();
     super.dispose();
+  }
+
+  String _getStatusText() {
+    switch (widget.mission['status']) {
+      case 'disponible':
+        return 'Disponible';
+      case 'en_progreso':
+        return 'En Progreso';
+      case 'completado':
+        return 'Completado';
+      default:
+        return 'Desconocido';
+    }
+  }
+
+  Color _getStatusColor() {
+    switch (widget.mission['status']) {
+      case 'disponible':
+        return FlutterFlowTheme.of(context).primary;
+      case 'en_progreso':
+        return Colors.orange;
+      case 'completado':
+        return Colors.green;
+      default:
+        return FlutterFlowTheme.of(context).secondaryText;
+    }
+  }
+
+  String _getActionButtonText() {
+    switch (widget.mission['status']) {
+      case 'disponible':
+        return 'Iniciar';
+      case 'en_progreso':
+        return 'Completar';
+      case 'completado':
+        return 'Completado';
+      default:
+        return 'Desconocido';
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 8.0),
-      child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: FlutterFlowTheme.of(context).secondaryBackground,
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 3.0,
-              color: Color(0x33000000),
-              offset: Offset(
-                0.0,
-                1.0,
-              ),
-            )
-          ],
-          borderRadius: BorderRadius.circular(8.0),
-        ),
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(16),
         child: Column(
-          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              mainAxisSize: MainAxisSize.max,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(1.0, 1.0, 1.0, 1.0),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(6.0),
-                          child: Image.asset(
-                            'assets/images/ChatGPT_Image_16_may_2025,_01_50_01_p.m..png',
-                            width: 80.0,
-                            height: 85.0,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              8.0, 8.0, 4.0, 0.0),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Hacer ejercicio ',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      font: GoogleFonts.pressStart2p(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .fontStyle,
-                                      ),
-                                      fontSize: 10.0,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontStyle,
-                                    ),
+                      Text(
+                        widget.mission['title'],
+                        style: FlutterFlowTheme.of(context).titleMedium.override(
+                              font: GoogleFonts.pressStart2p(
+                                fontWeight: FontWeight.w600,
                               ),
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 4.0, 8.0, 0.0),
-                                child: Text(
-                                  'Hacer ejercicio en las mañanas',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        font: GoogleFonts.pressStart2p(
-                                          fontWeight:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontWeight,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontStyle,
-                                        ),
-                                        fontSize: 6.0,
-                                        letterSpacing: 0.0,
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .fontStyle,
-                                      ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Column(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Stack(
-                            children: [
-                              Icon(
-                                Icons.add_circle,
-                                color: FlutterFlowTheme.of(context).primaryText,
-                                size: 24.0,
-                              ),
-                            ],
-                          ),
-                          Text(
-                            ' add in progress',
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  font: GoogleFonts.pressStart2p(
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontStyle,
-                                  ),
-                                  fontSize: 5.0,
-                                  letterSpacing: 0.0,
-                                  fontWeight: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontWeight,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontStyle,
-                                ),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          FlutterFlowIconButton(
-                            borderRadius: 30.0,
-                            buttonSize: 30.0,
-                            icon: Icon(
-                              Icons.delete_outline_rounded,
-                              color: Color(0xFFFF5963),
-                              size: 20.0,
+                              fontSize: 16,
                             ),
-                            onPressed: () {
-                              print('IconButton pressed ...');
-                            },
-                          ),
-                        ],
                       ),
+                      SizedBox(height: 4),
+                      if (widget.mission['categoria'] != null && widget.mission['imgCategoria'] != null)
+                        Row(
+                          children: [
+                            Image.asset(
+                              widget.mission['imgCategoria'],
+                              width: 24,
+                              height: 24,
+                            ),
+                            SizedBox(width: 8),
+                            Text(
+                              widget.mission['categoria'],
+                              style: GoogleFonts.pressStart2p(fontSize: 10, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
                     ],
                   ),
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: _getStatusColor().withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    _getStatusText(),
+                    style: TextStyle(
+                      color: _getStatusColor(),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 8),
+            Text(
+              widget.mission['description'],
+              style: FlutterFlowTheme.of(context).bodyMedium,
+            ),
+            SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                if (widget.mission['status'] == 'disponible')
+                  ElevatedButton(
+                    onPressed: () => widget.onChangeStatus(widget.mission['id'], 'en_progreso'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _getStatusColor(),
+                      foregroundColor: Colors.white,
+                    ),
+                    child: Text('Iniciar'),
+                  ),
+                if (widget.mission['status'] == 'en_progreso')
+                  ElevatedButton(
+                    onPressed: () => widget.onChangeStatus(widget.mission['id'], 'completado'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _getStatusColor(),
+                      foregroundColor: Colors.white,
+                    ),
+                    child: Text('Completar'),
+                  ),
+                IconButton(
+                  icon: Icon(Icons.delete, color: Colors.red),
+                  onPressed: () => widget.onDelete(widget.mission['id']),
                 ),
               ],
             ),

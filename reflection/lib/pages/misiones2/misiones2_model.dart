@@ -53,4 +53,8 @@ class Misiones2Model extends FlutterFlowModel<Misiones2Widget> {
     itemDeMisionModel3.dispose();
     itemDeMisionModel4.dispose();
   }
+
+  /// Action blocks are added here.
+
+  /// Additional helper methods are added here.
 }

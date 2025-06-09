@@ -80,6 +80,63 @@ class _MisionesWidgetState extends State<MisionesWidget> {
     });
   }
 
+  void _agregarMision(Map<String, dynamic> mision) {
+    setState(() {
+      _missions.add(mision);
+      // Aquí puedes agregar la lógica para guardar en Firebase en el futuro
+      // Por ejemplo: FirebaseFirestore.instance.collection('misiones').add(mision);
+    });
+  }
+
+  void _mostrarFormularioNuevaMision() {
+    final _tituloController = TextEditingController();
+    final _descripcionController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Nueva Misión'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: _tituloController,
+                decoration: InputDecoration(labelText: 'Título'),
+              ),
+              TextField(
+                controller: _descripcionController,
+                decoration: InputDecoration(labelText: 'Descripción'),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Cancelar'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (_tituloController.text.trim().isEmpty) return;
+                final nuevaMision = {
+                  'id': DateTime.now().millisecondsSinceEpoch.toString(),
+                  'title': _tituloController.text.trim(),
+                  'description': _descripcionController.text.trim(),
+                  'progress': 0,
+                  'total': 1,
+                  'isCompleted': false,
+                  'isUrgent': false,
+                };
+                _agregarMision(nuevaMision);
+                Navigator.of(context).pop();
+              },
+              child: Text('Guardar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -124,6 +181,18 @@ class _MisionesWidgetState extends State<MisionesWidget> {
                                 MissionList(
                                   missions: _missions,
                                   onMissionComplete: _handleMissionComplete,
+                                ),
+                                const SizedBox(height: 16),
+                                Center(
+                                  child: ElevatedButton.icon(
+                                    icon: Icon(Icons.add),
+                                    label: Text('Añadir misión'),
+                                    onPressed: _mostrarFormularioNuevaMision,
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: FlutterFlowTheme.of(context).primary,
+                                      foregroundColor: FlutterFlowTheme.of(context).primaryBackground,
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),

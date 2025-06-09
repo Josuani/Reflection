@@ -95,7 +95,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         print('New reflection pressed');
         break;
       case 'view_missions':
-        context.pushNamed('Misiones');
+        context.pushNamed('misiones2');
         break;
       case 'set_goal':
         // TODO: Navigate to set goal page
