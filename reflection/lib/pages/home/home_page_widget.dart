@@ -129,6 +129,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                     children: [
                       HomeHeader(
                         userName: 'John Doe',
+                        avatarUrl: 'assets/images/me.jpg',
+                        level: 7,
                       ),
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),

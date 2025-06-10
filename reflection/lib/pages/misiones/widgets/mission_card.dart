@@ -61,6 +61,8 @@ class MissionCard extends StatelessWidget {
                           letterSpacing: 0.0,
                           fontWeight: FontWeight.w600,
                         ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                   ),
                 ),
                 if (isUrgent)
@@ -103,6 +105,8 @@ class MissionCard extends StatelessWidget {
                       letterSpacing: 0.0,
                       fontWeight: FontWeight.w500,
                     ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
               ),
             ),
             Row(

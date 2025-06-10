@@ -1,19 +1,16 @@
-import '/flutter_flow/flutter_flow_icon_button.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
-import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
-import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'barrahome_model.dart';
-export 'barrahome_model.dart';
+import 'package:flutter_flow/flutter_flow_theme.dart';
+import 'package:flutter_flow/flutter_flow_widgets.dart';
 
 class BarrahomeWidget extends StatefulWidget {
-  const BarrahomeWidget({super.key});
+  const BarrahomeWidget({Key? key}) : super(key: key);
 
   @override
-  State<BarrahomeWidget> createState() => _BarrahomeWidgetState();
+  _BarrahomeWidgetState createState() => _BarrahomeWidgetState();
 }
 
 class _BarrahomeWidgetState extends State<BarrahomeWidget> {
@@ -29,506 +26,200 @@ class _BarrahomeWidgetState extends State<BarrahomeWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => BarrahomeModel());
-
-    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    _model.compactview = false;
   }
 
   @override
   void dispose() {
     _model.maybeDispose();
-
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: Duration(milliseconds: 200),
-      curve: Curves.easeIn,
-      width: _model.compactview! ? 120.0 : 300.0,
+    return Container(
+      width: _model.compactview ? 80 : 250,
       height: double.infinity,
       decoration: BoxDecoration(
         color: FlutterFlowTheme.of(context).primaryBackground,
+        boxShadow: [
+          BoxShadow(
+            blurRadius: 4,
+            color: FlutterFlowTheme.of(context).shadowColor,
+            offset: const Offset(2, 0),
+          ),
+        ],
       ),
-      child: Padding(
-        padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
-        child: SingleChildScrollView(
-          primary: false,
           child: Column(
             mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Row(
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(16, 16, 16, 16),
+            child: Row(
                 mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                if (!_model.compactview)
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: 100.0,
-                    height: 100.0,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                    ),
-                    child: Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 0.0, 0.0),
-                      child: Container(
-                        width: 100.0,
-                        height: 100.0,
-                        clipBehavior: Clip.antiAlias,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
+                        Text(
+                          'Reflection',
+                          style: FlutterFlowTheme.of(context).headlineMedium,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                         ),
-                        child: Image.asset(
-                          'assets/images/044_error_not_found_page-1024.webp',
-                          fit: BoxFit.cover,
+                        Text(
+                          'Tu espacio personal',
+                          style: FlutterFlowTheme.of(context).bodyMedium,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                         ),
-                      ),
+                      ],
                     ),
                   ),
-                  if (_model.compactview == false)
-                    Align(
-                      alignment: AlignmentDirectional(0.0, 0.0),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                'USER',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      font: GoogleFonts.pressStart2p(
-                                        fontWeight:
-                                            FlutterFlowTheme.of(context)
-                                                .bodyMedium
-                                                .fontWeight,
-                                        fontStyle:
-                                            FlutterFlowTheme.of(context)
-                                                .bodyMedium
-                                                .fontStyle,
-                                      ),
-                                      fontSize: 20.0,
-                                      letterSpacing: 0.0,
-                                      fontWeight:
-                                          FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .fontWeight,
-                                      fontStyle:
-                                          FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .fontStyle,
-                                    ),
-                              ),
+                IconButton(
+                  icon: Icon(
+                    _model.compactview ? Icons.menu_open : Icons.menu,
+                    color: FlutterFlowTheme.of(context).primaryText,
+                    size: 24,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _model.compactview = !_model.compactview;
+                    });
+                  },
                             ),
                           ],
                         ),
                       ),
-                    ),
-                  if (_model.compactview == false)
-                    InkWell(
-                      splashColor: Colors.transparent,
-                      focusColor: Colors.transparent,
-                      hoverColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      onTap: () async {
-                        _model.compactview = false;
-                        _model.updatePage(() {});
-                      },
-                      child: Container(
-                        width: 50.0,
-                        height: 50.0,
-                        decoration: BoxDecoration(
-                          color: FlutterFlowTheme.of(context).alternate,
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(44.0),
-                            bottomRight: Radius.circular(0.0),
-                            topLeft: Radius.circular(48.0),
-                            topRight: Radius.circular(0.0),
-                          ),
-                        ),
-                        child: Icon(
-                          Icons.arrow_back,
-                          color: FlutterFlowTheme.of(context).primaryText,
-                          size: 25.0,
-                        ),
-                      ),
-                    ),
-                  if (_model.compactview == true)
-                    InkWell(
-                      splashColor: Colors.transparent,
-                      focusColor: Colors.transparent,
-                      hoverColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      onTap: () async {
-                        _model.compactview = false;
-                        _model.updatePage(() {});
-                      },
-                      child: Container(
-                        width: 50.0,
-                        height: 50.0,
-                        decoration: BoxDecoration(
-                          color: FlutterFlowTheme.of(context).alternate,
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(44.0),
-                            bottomRight: Radius.circular(0.0),
-                            topLeft: Radius.circular(48.0),
-                            topRight: Radius.circular(0.0),
-                          ),
-                        ),
-                        child: Icon(
-                          Icons.arrow_forward,
-                          color: FlutterFlowTheme.of(context).primaryText,
-                          size: 25.0,
-                        ),
-                      ),
+          Expanded(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              scrollDirection: Axis.vertical,
+              children: [
+                _buildNavItem(
+                  icon: Icons.home_outlined,
+                  label: 'Inicio',
+                  isSelected: true,
+                  onTap: () {},
+                ),
+                _buildNavItem(
+                  icon: Icons.flag_outlined,
+                  label: 'Misiones',
+                  onTap: () {},
+                ),
+                _buildNavItem(
+                  icon: Icons.person_outline,
+                  label: 'Perfil',
+                  onTap: () {},
+                ),
+                _buildNavItem(
+                  icon: Icons.settings_outlined,
+                  label: 'Configuración',
+                  onTap: () {},
                     ),
                 ],
               ),
-              Divider(
-                thickness: 2.0,
-                color: FlutterFlowTheme.of(context).alternate,
               ),
-              SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
                     Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(
-                          12.0, 24.0, 12.0, 24.0),
-                      child: Container(
-                        width: 325.9,
-                        height: 50.0,
-                        decoration: BoxDecoration(
-                          color: FlutterFlowTheme.of(context).secondary,
-                          borderRadius: BorderRadius.circular(22.0),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              30.0, 0.0, 30.0, 1.0),
+            padding: const EdgeInsetsDirectional.fromSTEB(16, 16, 16, 16),
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
                             children: [
-                              Icon(
-                                Icons.home_outlined,
-                                color:
-                                    FlutterFlowTheme.of(context).primaryText,
-                                size: 24.0,
-                              ),
-                              if (_model.compactview == false)
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: FlutterFlowTheme.of(context).accent1,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.person,
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                ),
+                if (!_model.compactview)
+                  Expanded(
+                        child: Padding(
+                      padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
                                 Text(
-                                  'INICIO',
-                                  style: FlutterFlowTheme.of(context)
-                                      .headlineSmall
-                                      .override(
-                                        font: GoogleFonts.pressStart2p(
-                                          fontWeight: FontWeight.bold,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .headlineSmall
-                                                  .fontStyle,
-                                        ),
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryText,
-                                        letterSpacing: 0.0,
-                                        fontWeight: FontWeight.bold,
-                                        fontStyle:
-                                            FlutterFlowTheme.of(context)
-                                                .headlineSmall
-                                                .fontStyle,
-                                      ),
-                            ].divide(SizedBox(width: 12.0)),
+                            'Usuario',
+                            style: FlutterFlowTheme.of(context).bodyMedium,
                           ),
-                        ),
+                                Text(
+                            'usuario@email.com',
+                            style: FlutterFlowTheme.of(context).bodySmall,
+                          ),
+                        ],
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(
-                          12.0, 24.0, 12.0, 24.0),
-                      child: Container(
-                        width: 325.9,
-                        height: 50.0,
-                        decoration: BoxDecoration(
-                          color:
-                              FlutterFlowTheme.of(context).primaryBackground,
-                          borderRadius: BorderRadius.circular(22.0),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              30.0, 0.0, 30.0, 1.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Icon(
-                                Icons.bookmarks_rounded,
-                                color:
-                                    FlutterFlowTheme.of(context).primaryText,
-                                size: 24.0,
-                              ),
-                              if (_model.compactview == false)
-                                Text(
-                                  'Perfil',
-                                  style: FlutterFlowTheme.of(context)
-                                      .headlineSmall
-                                      .override(
-                                        font: GoogleFonts.pressStart2p(
-                                          fontWeight: FontWeight.bold,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .headlineSmall
-                                                  .fontStyle,
-                                        ),
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryText,
-                                        fontSize: 24.0,
-                                        letterSpacing: 0.0,
-                                        fontWeight: FontWeight.bold,
-                                        fontStyle:
-                                            FlutterFlowTheme.of(context)
-                                                .headlineSmall
-                                                .fontStyle,
-                                      ),
-                            ].divide(SizedBox(width: 12.0)),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(
-                          12.0, 24.0, 12.0, 24.0),
-                      child: Container(
-                        width: 325.9,
-                        height: 50.0,
-                        decoration: BoxDecoration(
-                          color:
-                              FlutterFlowTheme.of(context).primaryBackground,
-                          borderRadius: BorderRadius.circular(22.0),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              30.0, 0.0, 30.0, 1.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Icon(
-                                Icons.radar_outlined,
-                                color:
-                                    FlutterFlowTheme.of(context).primaryText,
-                                size: 24.0,
-                              ),
-                              if (_model.compactview == false)
-                                Text(
-                                  'Objetivos',
-                                  style: FlutterFlowTheme.of(context)
-                                      .headlineSmall
-                                      .override(
-                                        font: GoogleFonts.pressStart2p(
-                                          fontWeight: FontWeight.bold,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .headlineSmall
-                                                  .fontStyle,
-                                        ),
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryText,
-                                        fontSize: 20.0,
-                                        letterSpacing: 0.0,
-                                        fontWeight: FontWeight.bold,
-                                        fontStyle:
-                                            FlutterFlowTheme.of(context)
-                                                .headlineSmall
-                                                .fontStyle,
-                                      ),
-                            ].divide(SizedBox(width: 12.0)),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(
-                          12.0, 24.0, 12.0, 24.0),
-                      child: Container(
-                        width: 325.9,
-                        height: 50.0,
-                        decoration: BoxDecoration(
-                          color:
-                              FlutterFlowTheme.of(context).primaryBackground,
-                          borderRadius: BorderRadius.circular(22.0),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              30.0, 0.0, 30.0, 1.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Icon(
-                                Icons.content_paste,
-                                color:
-                                    FlutterFlowTheme.of(context).primaryText,
-                                size: 24.0,
-                              ),
-                              if (_model.compactview == false)
-                                Text(
-                                  'Misiones',
-                                  style: FlutterFlowTheme.of(context)
-                                      .headlineSmall
-                                      .override(
-                                        font: GoogleFonts.pressStart2p(
-                                          fontWeight: FontWeight.bold,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .headlineSmall
-                                                  .fontStyle,
-                                        ),
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryText,
-                                        fontSize: 22.0,
-                                        letterSpacing: 0.0,
-                                        fontWeight: FontWeight.bold,
-                                        fontStyle:
-                                            FlutterFlowTheme.of(context)
-                                                .headlineSmall
-                                                .fontStyle,
-                                      ),
-                            ].divide(SizedBox(width: 12.0)),
-                          ),
-                        ),
+                  ),
+              ],
                       ),
                     ),
                   ],
                 ),
-              ),
-              Divider(
-                thickness: 2.0,
-                color: FlutterFlowTheme.of(context).alternate,
-              ),
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.all(24.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      FlutterFlowIconButton(
-                        borderRadius: 30.0,
-                        borderWidth: 1.0,
-                        buttonSize: 40.0,
-                        fillColor: FlutterFlowTheme.of(context).primaryText,
-                        icon: Icon(
-                          Icons.brightness_3_outlined,
-                          color:
-                              FlutterFlowTheme.of(context).secondaryBackground,
-                          size: 24.0,
-                        ),
-                        onPressed: () {
-                          print('IconButton pressed ...');
-                        },
-                      ),
-                      if (_model.compactview == false)
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.all(12.0),
-                            child: Text(
-                              'Obscuro',
-                              textAlign: TextAlign.center,
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    font: GoogleFonts.pressStart2p(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontStyle,
-                                    ),
-                                    letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontStyle,
-                                  ),
-                            ),
-                          ),
-                        ),
-                      Icon(
-                        Icons.keyboard_arrow_right,
-                        color: FlutterFlowTheme.of(context).primaryText,
-                        size: 24.0,
-                      ),
-                    ],
+    );
+  }
+
+  Widget _buildNavItem({
+    required IconData icon,
+    required String label,
+    bool isSelected = false,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        height: 50,
+        decoration: BoxDecoration(
+          color: isSelected
+              ? FlutterFlowTheme.of(context).primaryBackground
+              : Colors.transparent,
+          border: Border(
+            left: BorderSide(
+              color: isSelected
+                  ? FlutterFlowTheme.of(context).primary
+                  : Colors.transparent,
+              width: 3,
                   ),
                 ),
               ),
-              Expanded(
-                flex: 8,
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    if (_model.compactview == false)
-                      Expanded(
-                        flex: 8,
-                        child: Align(
-                          alignment: AlignmentDirectional(0.0, 1.0),
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                12.0, 40.0, 12.0, 0.0),
-                            child: FFButtonWidget(
-                              onPressed: () {
-                                print('Button pressed ...');
-                              },
-                              text: 'CERRAR SESIÓN',
-                              icon: Icon(
-                                Icons.logout,
-                                size: 15.0,
-                              ),
-                              options: FFButtonOptions(
-                                width: double.infinity,
-                                height: 48.0,
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    16.0, 0.0, 16.0, 0.0),
-                                iconAlignment: IconAlignment.start,
-                                iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 0.0),
-                                color:
-                                    FlutterFlowTheme.of(context).secondaryText,
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .titleSmall
-                                    .override(
-                                      font: GoogleFonts.pressStart2p(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontStyle,
-                                      ),
-                                      color: Colors.white,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontStyle,
-                                    ),
-                                elevation: 0.0,
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
+            Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 0, 0),
+              child: Icon(
+                icon,
+                color: isSelected
+                    ? FlutterFlowTheme.of(context).primary
+                    : FlutterFlowTheme.of(context).secondaryText,
+                size: 24,
+              ),
+            ),
+            if (!_model.compactview)
+              Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
+                child: Text(
+                  label,
+                  style: FlutterFlowTheme.of(context).bodyMedium.override(
+                        fontFamily: 'Readex Pro',
+                        color: isSelected
+                            ? FlutterFlowTheme.of(context).primary
+                            : FlutterFlowTheme.of(context).secondaryText,
                           ),
                         ),
                       ),
                   ],
-                ),
-              ),
-            ].divide(SizedBox(height: 8.0)),
-          ),
         ),
       ),
     );

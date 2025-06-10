@@ -1,7 +1,21 @@
-2025/06/08-23:01:14.398 875d5 Reusing MANIFEST /tmp/flutter_tools.NKRQJS/flutter_tools_chrome_device.LTWVHQ/Default/shared_proto_db/MANIFEST-000001
-2025/06/08-23:01:14.398 875d5 Recovering log #13
-2025/06/08-23:01:14.399 875d5 Reusing old log /tmp/flutter_tools.NKRQJS/flutter_tools_chrome_device.LTWVHQ/Default/shared_proto_db/000013.log 
-2025/06/08-23:01:14.399 875d5 Delete type=0 #7
-2025/06/08-23:01:14.399 875d5 Delete type=0 #3
-2025/06/08-23:01:14.399 875d5 Delete type=0 #10
-2025/06/08-23:01:14.399 875d5 Delete type=0 #4
+2025/06/10-00:21:07.718 1b3ebb Reusing MANIFEST /private/var/folders/9j/r2dnrc116tv5gj9k7kx0cqn00000gp/T/flutter_tools.Fevz8Y/flutter_tools_chrome_device.mLdzLk/Default/shared_proto_db/MANIFEST-000001
+2025/06/10-00:21:07.719 1b3ebb Recovering log #32
+2025/06/10-00:21:07.721 1b3ebb Reusing old log /private/var/folders/9j/r2dnrc116tv5gj9k7kx0cqn00000gp/T/flutter_tools.Fevz8Y/flutter_tools_chrome_device.mLdzLk/Default/shared_proto_db/000032.log 
+2025/06/10-00:21:07.722 1b3ebb Delete type=0 #13
+2025/06/10-00:21:07.722 1b3ebb Delete type=0 #7
+2025/06/10-00:21:07.722 1b3ebb Delete type=0 #4
+2025/06/10-00:21:07.722 1b3ebb Delete type=0 #10
+2025/06/10-00:21:07.722 1b3ebb Delete type=0 #29
+2025/06/10-00:21:07.722 1b3ebb Delete type=0 #16
+2025/06/10-00:21:07.722 1b3ebb Delete type=0 #3
+2025/06/10-00:21:07.723 1b3ebb Delete type=2 #14
+2025/06/10-00:21:07.723 1b3ebb Delete type=2 #17
+2025/06/10-00:21:07.723 1b3ebb Delete type=2 #11
+2025/06/10-00:21:07.723 1b3ebb Delete type=2 #8
+2025/06/10-00:21:07.723 1b3ebb Delete type=2 #21
+2025/06/10-00:21:07.723 1b3ebb Delete type=2 #27
+2025/06/10-00:21:07.723 1b3ebb Delete type=2 #24
+2025/06/10-00:21:07.723 1b3ebb Delete type=2 #30
+2025/06/10-00:21:07.723 1b3ebb Delete type=0 #26
+2025/06/10-00:21:07.723 1b3ebb Delete type=0 #19
+2025/06/10-00:21:07.723 1b3ebb Delete type=0 #23

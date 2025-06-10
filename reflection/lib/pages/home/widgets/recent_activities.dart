@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 class RecentActivities extends StatelessWidget {
   final List<Map<String, dynamic>> activities;
@@ -22,154 +21,136 @@ class RecentActivities extends StatelessWidget {
           color: FlutterFlowTheme.of(context).primary,
           width: 2.0,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Padding(
-        padding: EdgeInsets.all(24.0),
+        padding: const EdgeInsets.all(24.0),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'ACTIVIDADES RECIENTES',
+              'Actividades Recientes',
               style: FlutterFlowTheme.of(context).titleLarge.override(
                     font: GoogleFonts.pressStart2p(
                       fontWeight: FontWeight.bold,
                       fontStyle: FlutterFlowTheme.of(context).titleLarge.fontStyle,
                     ),
                     color: FlutterFlowTheme.of(context).primaryText,
-                    fontSize: 20.0,
+                    fontSize: 18.0,
                     letterSpacing: 0.0,
                     fontWeight: FontWeight.bold,
                   ),
             ),
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
-              child: Column(
-                children: [
-                  for (int i = 0; i < activities.length; i++) ...[
-                    if (i > 0)
-                      Divider(
-                        height: 24.0,
-                        thickness: 1.0,
-                        color: FlutterFlowTheme.of(context).alternate,
+            const SizedBox(height: 24),
+            ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: activities.length,
+              separatorBuilder: (context, index) => const SizedBox(height: 16),
+              itemBuilder: (context, index) {
+                final activity = activities[index];
+                return TweenAnimationBuilder<double>(
+                  tween: Tween(begin: 0, end: 1),
+                  duration: Duration(milliseconds: 600 + (index * 100)),
+                  builder: (context, value, child) {
+                    return Transform.translate(
+                      offset: Offset((1 - value) * 40, 0),
+                      child: Opacity(
+                        opacity: value,
+                        child: child,
                       ),
-                    _buildActivityItem(context, activities[i]),
-                  ]
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildActivityItem(BuildContext context, Map<String, dynamic> activity) {
-    final String title = activity['title'] ?? '';
-    final String description = activity['description'] ?? '';
-    final DateTime timestamp = activity['timestamp'] ?? DateTime.now();
-    final IconData icon = activity['icon'] ?? Icons.star;
-    final int xpReward = activity['xpReward'] ?? 0;
-
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          width: 40.0,
-          height: 40.0,
-          decoration: BoxDecoration(
-            color: FlutterFlowTheme.of(context).primary.withOpacity(0.1),
-            shape: BoxShape.circle,
-          ),
-          child: Icon(
-            icon,
-            color: FlutterFlowTheme.of(context).primary,
-            size: 20.0,
-          ),
-        ),
-        Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 0.0, 0.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: FlutterFlowTheme.of(context).titleSmall.override(
-                      font: GoogleFonts.pressStart2p(
-                        fontWeight: FontWeight.bold,
-                        fontStyle: FlutterFlowTheme.of(context).titleSmall.fontStyle,
+                    );
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: FlutterFlowTheme.of(context).accent1,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: FlutterFlowTheme.of(context).primary,
+                        width: 2.0,
                       ),
-                      color: FlutterFlowTheme.of(context).primaryText,
-                      fontSize: 14.0,
-                      letterSpacing: 0.0,
-                      fontWeight: FontWeight.bold,
                     ),
-              ),
-              Text(
-                description,
-                style: FlutterFlowTheme.of(context).bodySmall.override(
-                      font: GoogleFonts.pressStart2p(
-                        fontWeight: FontWeight.w500,
-                        fontStyle: FlutterFlowTheme.of(context).bodySmall.fontStyle,
-                      ),
-                      color: FlutterFlowTheme.of(context).secondaryText,
-                      fontSize: 12.0,
-                      letterSpacing: 0.0,
-                      fontWeight: FontWeight.w500,
-                    ),
-              ),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Text(
-                      timeago.format(timestamp),
-                      style: FlutterFlowTheme.of(context).bodySmall.override(
-                            font: GoogleFonts.pressStart2p(
-                              fontWeight: FontWeight.w500,
-                              fontStyle: FlutterFlowTheme.of(context).bodySmall.fontStyle,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 48,
+                            height: 48,
+                            decoration: BoxDecoration(
+                              color: FlutterFlowTheme.of(context).primary.withOpacity(0.1),
+                              shape: BoxShape.circle,
                             ),
-                            color: FlutterFlowTheme.of(context).secondaryText,
-                            fontSize: 10.0,
-                            letterSpacing: 0.0,
-                            fontWeight: FontWeight.w500,
+                            child: Icon(
+                              activity['icon'] as IconData,
+                              color: FlutterFlowTheme.of(context).primary,
+                              size: 24,
+                            ),
                           ),
-                    ),
-                    if (xpReward > 0) ...[
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(8.0, 0.0, 0.0, 0.0),
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                          decoration: BoxDecoration(
-                            color: FlutterFlowTheme.of(context).primary,
-                            borderRadius: BorderRadius.circular(4.0),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  activity['title'] as String,
+                                  style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                        font: GoogleFonts.pressStart2p(
+                                          fontWeight: FontWeight.w600,
+                                          fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                        ),
+                                        color: FlutterFlowTheme.of(context).primaryText,
+                                        fontSize: 14.0,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  activity['description'] as String,
+                                  style: FlutterFlowTheme.of(context).bodySmall.override(
+                                        font: GoogleFonts.pressStart2p(
+                                          fontWeight: FontWeight.w500,
+                                          fontStyle: FlutterFlowTheme.of(context).bodySmall.fontStyle,
+                                        ),
+                                        color: FlutterFlowTheme.of(context).secondaryText,
+                                        fontSize: 12.0,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                ),
+                              ],
+                            ),
                           ),
-                          child: Text(
-                            '+$xpReward XP',
+                          Text(
+                            activity['time'] as String,
                             style: FlutterFlowTheme.of(context).bodySmall.override(
                                   font: GoogleFonts.pressStart2p(
                                     fontWeight: FontWeight.w500,
                                     fontStyle: FlutterFlowTheme.of(context).bodySmall.fontStyle,
                                   ),
-                                  color: FlutterFlowTheme.of(context).primaryBackground,
-                                  fontSize: 10.0,
+                                  color: FlutterFlowTheme.of(context).secondaryText,
+                                  fontSize: 12.0,
                                   letterSpacing: 0.0,
                                   fontWeight: FontWeight.w500,
                                 ),
                           ),
-                        ),
+                        ],
                       ),
-                    ],
-                  ],
-                ),
-              ),
-            ],
-          ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 } 

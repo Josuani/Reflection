@@ -31,180 +31,141 @@ class DailyProgress extends StatelessWidget {
           color: FlutterFlowTheme.of(context).primary,
           width: 2.0,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Padding(
-        padding: EdgeInsets.all(24.0),
+        padding: const EdgeInsets.all(24.0),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'PROGRESO DIARIO',
-                  style: FlutterFlowTheme.of(context).titleLarge.override(
-                        font: GoogleFonts.pressStart2p(
-                          fontWeight: FontWeight.bold,
-                          fontStyle: FlutterFlowTheme.of(context).titleLarge.fontStyle,
-                        ),
-                        color: FlutterFlowTheme.of(context).primaryText,
-                        fontSize: 20.0,
-                        letterSpacing: 0.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
-                  decoration: BoxDecoration(
-                    color: FlutterFlowTheme.of(context).primary,
-                    borderRadius: BorderRadius.circular(8.0),
+                Icon(Icons.show_chart, size: 28),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Progreso diario',
+                    style: Theme.of(context).textTheme.titleMedium,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                   ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.local_fire_department,
-                        color: FlutterFlowTheme.of(context).primaryBackground,
-                        size: 16.0,
-                      ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 0.0, 0.0),
-                        child: Text(
-                          '$streakDays días',
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+            TweenAnimationBuilder<double>(
+              tween: Tween(begin: 0, end: progress),
+              duration: const Duration(milliseconds: 1000),
+              builder: (context, value, child) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Tareas Completadas',
                           style: FlutterFlowTheme.of(context).bodyMedium.override(
                                 font: GoogleFonts.pressStart2p(
                                   fontWeight: FontWeight.w500,
                                   fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                 ),
-                                color: FlutterFlowTheme.of(context).primaryBackground,
+                                color: FlutterFlowTheme.of(context).secondaryText,
                                 fontSize: 14.0,
                                 letterSpacing: 0.0,
                                 fontWeight: FontWeight.w500,
                               ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 0.0),
-              child: SizedBox(
-                height: 80.0,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Tareas',
-                          style: FlutterFlowTheme.of(context).titleSmall.override(
-                                font: GoogleFonts.pressStart2p(
-                                  fontWeight: FontWeight.bold,
-                                  fontStyle: FlutterFlowTheme.of(context).titleSmall.fontStyle,
-                                ),
-                                color: FlutterFlowTheme.of(context).primaryText,
-                                fontSize: 16.0,
-                                letterSpacing: 0.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                        ),
                         Text(
                           '$completedTasks/$totalTasks',
-                          style: FlutterFlowTheme.of(context).titleSmall.override(
+                          style: FlutterFlowTheme.of(context).bodyMedium.override(
                                 font: GoogleFonts.pressStart2p(
-                                  fontWeight: FontWeight.bold,
-                                  fontStyle: FlutterFlowTheme.of(context).titleSmall.fontStyle,
+                                  fontWeight: FontWeight.w600,
+                                  fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                 ),
-                                color: FlutterFlowTheme.of(context).primary,
-                                fontSize: 16.0,
+                                color: FlutterFlowTheme.of(context).primaryText,
+                                fontSize: 14.0,
                                 letterSpacing: 0.0,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w600,
                               ),
                         ),
                       ],
                     ),
-                    Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 0.0),
-                      child: LinearPercentIndicator(
-                        percent: progress,
-                        width: MediaQuery.of(context).size.width - 96.0,
-                        lineHeight: 12.0,
-                        animation: true,
-                        animateFromLastPercent: true,
-                        progressColor: FlutterFlowTheme.of(context).primary,
-                        backgroundColor: FlutterFlowTheme.of(context).accent4,
-                        barRadius: Radius.circular(6.0),
-                        padding: EdgeInsets.zero,
-                      ),
+                    const SizedBox(height: 8),
+                    LinearPercentIndicator(
+                      padding: EdgeInsets.zero,
+                      lineHeight: 8.0,
+                      percent: value,
+                      backgroundColor: FlutterFlowTheme.of(context).accent1,
+                      progressColor: FlutterFlowTheme.of(context).primary,
+                      barRadius: const Radius.circular(4),
+                      animation: true,
+                      animateFromLastPercent: true,
                     ),
                   ],
-                ),
-              ),
+                );
+              },
             ),
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 0.0),
-              child: SizedBox(
-                height: 80.0,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
+            const SizedBox(height: 24),
+            TweenAnimationBuilder<double>(
+              tween: Tween(begin: 0, end: goalProgress),
+              duration: const Duration(milliseconds: 1000),
+              builder: (context, value, child) {
+                return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           'Meta Diaria',
-                          style: FlutterFlowTheme.of(context).titleSmall.override(
+                          style: FlutterFlowTheme.of(context).bodyMedium.override(
                                 font: GoogleFonts.pressStart2p(
-                                  fontWeight: FontWeight.bold,
-                                  fontStyle: FlutterFlowTheme.of(context).titleSmall.fontStyle,
+                                  fontWeight: FontWeight.w500,
+                                  fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                 ),
-                                color: FlutterFlowTheme.of(context).primaryText,
-                                fontSize: 16.0,
+                                color: FlutterFlowTheme.of(context).secondaryText,
+                                fontSize: 14.0,
                                 letterSpacing: 0.0,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w500,
                               ),
                         ),
                         Text(
                           '$completedTasks/$dailyGoal',
-                          style: FlutterFlowTheme.of(context).titleSmall.override(
+                          style: FlutterFlowTheme.of(context).bodyMedium.override(
                                 font: GoogleFonts.pressStart2p(
-                                  fontWeight: FontWeight.bold,
-                                  fontStyle: FlutterFlowTheme.of(context).titleSmall.fontStyle,
+                                  fontWeight: FontWeight.w600,
+                                  fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                 ),
-                                color: FlutterFlowTheme.of(context).primary,
-                                fontSize: 16.0,
+                                color: FlutterFlowTheme.of(context).primaryText,
+                                fontSize: 14.0,
                                 letterSpacing: 0.0,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w600,
                               ),
                         ),
                       ],
                     ),
-                    Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 0.0),
-                      child: LinearPercentIndicator(
-                        percent: goalProgress,
-                        width: MediaQuery.of(context).size.width - 96.0,
-                        lineHeight: 12.0,
-                        animation: true,
-                        animateFromLastPercent: true,
-                        progressColor: FlutterFlowTheme.of(context).primary,
-                        backgroundColor: FlutterFlowTheme.of(context).accent4,
-                        barRadius: Radius.circular(6.0),
-                        padding: EdgeInsets.zero,
-                      ),
+                    const SizedBox(height: 8),
+                    LinearPercentIndicator(
+                      padding: EdgeInsets.zero,
+                      lineHeight: 8.0,
+                      percent: value,
+                      backgroundColor: FlutterFlowTheme.of(context).accent1,
+                      progressColor: FlutterFlowTheme.of(context).success,
+                      barRadius: const Radius.circular(4),
+                      animation: true,
+                      animateFromLastPercent: true,
                     ),
                   ],
-                ),
-              ),
+                );
+              },
             ),
           ],
         ),

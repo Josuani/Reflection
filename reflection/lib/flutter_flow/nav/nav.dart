@@ -36,6 +36,7 @@ class AppStateNotifier extends ChangeNotifier {
   BaseAuthUser? user;
   bool showSplashImage = true;
   String? _redirectLocation;
+  bool _isLoading = false;
 
   /// Determines whether the app will refresh and build again when a sign
   /// in or sign out happens. This is useful when the app is launched or
@@ -44,8 +45,8 @@ class AppStateNotifier extends ChangeNotifier {
   /// Otherwise, this will trigger a refresh and interrupt the action(s).
   bool notifyOnAuthChange = true;
 
-  bool get loading => false;
-  bool get loggedIn => true;
+  bool get loading => _isLoading;
+  bool get loggedIn => user?.loggedIn ?? false;
   bool get initiallyLoggedIn => initialUser?.loggedIn ?? false;
   bool get shouldRedirect => loggedIn && _redirectLocation != null;
 
@@ -71,6 +72,11 @@ class AppStateNotifier extends ChangeNotifier {
     updateNotifyOnAuthChange(true);
   }
 
+  void setLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
+
   void stopShowingSplashImage() {
     print('AppStateNotifier.stopShowingSplashImage llamado');
     showSplashImage = false;
@@ -93,22 +99,25 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         ),
         GoRoute(
           path: '/app',
+          redirect: (context, state) => '/app/home',
+        ),
+        GoRoute(
+          name: 'homePage',
+          path: '/app/home',
           builder: (context, state) => MainAppShellWidget(),
           routes: [
             GoRoute(
-              path: HomePageWidget.routePath.substring(1),
-              builder: (context, state) => HomePageWidget(),
-            ),
-            GoRoute(
-              path: PerfilWidget.routePath.substring(1),
-              builder: (context, state) => PerfilWidget(),
-            ),
-            GoRoute(
-              path: Misiones2Widget.routePath.substring(1),
+              name: 'misiones',
+              path: 'misiones',
               builder: (context, state) => Misiones2Widget(),
             ),
+            GoRoute(
+              name: 'perfil',
+              path: 'perfil',
+              builder: (context, state) => PerfilWidget(),
+            ),
           ],
-        ) as RouteBase,
+        ),
         FFRoute(
           name: CerrarsesinonWidget.routeName,
           path: CerrarsesinonWidget.routePath,

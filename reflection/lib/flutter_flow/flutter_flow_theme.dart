@@ -143,17 +143,17 @@ class LightModeTheme extends FlutterFlowTheme {
   Color get tertiaryColor => tertiary;
 
   late Color primary = const Color(0xFFA8CBEA);
-  late Color secondary = const Color(0xFFD5E8F6);
-  late Color tertiary = const Color(0xFF92B4D3);
+  late Color secondary = const Color(0xFF92B4D3);
+  late Color tertiary = const Color(0xFFD5E8F6);
   late Color alternate = const Color(0xFFE3EDF5);
   late Color primaryText = const Color(0xFF1E2B3A);
-  late Color secondaryText = const Color(0xFF5D6D7E);
+  late Color secondaryText = const Color(0xFF7086A2);
   late Color primaryBackground = const Color(0xFFF5FAFD);
-  late Color secondaryBackground = const Color(0xFFFFFFFF);
+  late Color secondaryBackground = const Color(0xFFF0FAFF);
   late Color accent1 = const Color(0xFF3B4C68);
-  late Color accent2 = const Color(0xFF7086A2);
-  late Color accent3 = const Color(0xFFBFD7ED);
-  late Color accent4 = const Color(0xFFF0FAFF);
+  late Color accent2 = const Color(0xFFBFD7ED);
+  late Color accent3 = const Color(0xFF6BBFA3);
+  late Color accent4 = const Color(0xFFF6D776);
   late Color success = const Color(0xFF6BBFA3);
   late Color warning = const Color(0xFFF6D776);
   late Color error = const Color(0xFFFF7A78);
@@ -216,63 +216,63 @@ class ThemeTypography extends Typography {
   String get displayLargeFamily => 'Press Start 2P';
   bool get displayLargeIsCustom => false;
   TextStyle get displayLarge => GoogleFonts.pressStart2p(
-        color: theme.primaryText,
+        color: theme.accent1,
         fontWeight: FontWeight.w600,
         fontSize: 64.0,
       );
   String get displayMediumFamily => 'Press Start 2P';
   bool get displayMediumIsCustom => false;
   TextStyle get displayMedium => GoogleFonts.pressStart2p(
-        color: theme.primaryText,
+        color: theme.accent1,
         fontWeight: FontWeight.w600,
         fontSize: 44.0,
       );
   String get displaySmallFamily => 'Press Start 2P';
   bool get displaySmallIsCustom => false;
   TextStyle get displaySmall => GoogleFonts.pressStart2p(
-        color: theme.primaryText,
+        color: theme.accent1,
         fontWeight: FontWeight.w600,
         fontSize: 36.0,
       );
   String get headlineLargeFamily => 'Press Start 2P';
   bool get headlineLargeIsCustom => false;
   TextStyle get headlineLarge => GoogleFonts.pressStart2p(
-        color: theme.primaryText,
+        color: theme.accent1,
         fontWeight: FontWeight.w600,
         fontSize: 32.0,
       );
   String get headlineMediumFamily => 'Press Start 2P';
   bool get headlineMediumIsCustom => false;
   TextStyle get headlineMedium => GoogleFonts.pressStart2p(
-        color: theme.primaryText,
+        color: theme.accent1,
         fontWeight: FontWeight.w600,
         fontSize: 28.0,
       );
   String get headlineSmallFamily => 'Press Start 2P';
   bool get headlineSmallIsCustom => false;
   TextStyle get headlineSmall => GoogleFonts.pressStart2p(
-        color: theme.primaryText,
+        color: theme.accent1,
         fontWeight: FontWeight.w600,
         fontSize: 24.0,
       );
   String get titleLargeFamily => 'Press Start 2P';
   bool get titleLargeIsCustom => false;
   TextStyle get titleLarge => GoogleFonts.pressStart2p(
-        color: theme.primaryText,
+        color: theme.accent1,
         fontWeight: FontWeight.w600,
         fontSize: 20.0,
       );
   String get titleMediumFamily => 'Press Start 2P';
   bool get titleMediumIsCustom => false;
   TextStyle get titleMedium => GoogleFonts.pressStart2p(
-        color: theme.primaryText,
+        color: theme.accent1,
         fontWeight: FontWeight.w600,
         fontSize: 18.0,
       );
   String get titleSmallFamily => 'Press Start 2P';
   bool get titleSmallIsCustom => false;
   TextStyle get titleSmall => GoogleFonts.pressStart2p(
-        color: theme.primaryText,
+        color: theme.accent1,
         fontWeight: FontWeight.w600,
         fontSize: 16.0,
       );
@@ -297,26 +297,26 @@ class ThemeTypography extends Typography {
         fontWeight: FontWeight.normal,
         fontSize: 12.0,
       );
-  String get bodyLargeFamily => 'Press Start 2P';
+  String get bodyLargeFamily => 'VT323';
   bool get bodyLargeIsCustom => false;
-  TextStyle get bodyLarge => GoogleFonts.pressStart2p(
+  TextStyle get bodyLarge => GoogleFonts.vt323(
+        color: theme.primaryText,
+        fontWeight: FontWeight.normal,
+        fontSize: 20.0,
+      );
+  String get bodyMediumFamily => 'VT323';
+  bool get bodyMediumIsCustom => false;
+  TextStyle get bodyMedium => GoogleFonts.vt323(
+        color: theme.primaryText,
+        fontWeight: FontWeight.normal,
+        fontSize: 18.0,
+      );
+  String get bodySmallFamily => 'VT323';
+  bool get bodySmallIsCustom => false;
+  TextStyle get bodySmall => GoogleFonts.vt323(
         color: theme.primaryText,
         fontWeight: FontWeight.normal,
         fontSize: 16.0,
-      );
-  String get bodyMediumFamily => 'Press Start 2P';
-  bool get bodyMediumIsCustom => false;
-  TextStyle get bodyMedium => GoogleFonts.pressStart2p(
-        color: theme.primaryText,
-        fontWeight: FontWeight.normal,
-        fontSize: 14.0,
-      );
-  String get bodySmallFamily => 'Press Start 2P';
-  bool get bodySmallIsCustom => false;
-  TextStyle get bodySmall => GoogleFonts.pressStart2p(
-        color: theme.primaryText,
-        fontWeight: FontWeight.normal,
-        fontSize: 12.0,
       );
 }
 
@@ -328,22 +328,22 @@ class DarkModeTheme extends FlutterFlowTheme {
   @Deprecated('Use tertiary instead')
   Color get tertiaryColor => tertiary;
 
-  late Color primary = const Color(0xFF3A5A78);
-  late Color secondary = const Color(0xFF2C3E50);
-  late Color tertiary = const Color(0xFF587A9D);
-  late Color alternate = const Color(0xFF1F2A38);
-  late Color primaryText = const Color(0xFFFFFFFF);
-  late Color secondaryText = const Color(0xFFAAB8C2);
-  late Color primaryBackground = const Color(0xFF11161C);
-  late Color secondaryBackground = const Color(0xFF1B2734);
-  late Color accent1 = const Color(0xFFA8CBEA);
+  late Color primary = const Color(0xFFA8CBEA);
+  late Color secondary = const Color(0xFF92B4D3);
+  late Color tertiary = const Color(0xFF3B4C68);
+  late Color alternate = const Color(0xFF1E2B3A);
+  late Color primaryText = const Color(0xFFF0FAFF);
+  late Color secondaryText = const Color(0xFFBFD7ED);
+  late Color primaryBackground = const Color(0xFF1E2B3A);
+  late Color secondaryBackground = const Color(0xFF3B4C68);
+  late Color accent1 = const Color(0xFFD5E8F6);
   late Color accent2 = const Color(0xFF7086A2);
-  late Color accent3 = const Color(0xFF40566B);
-  late Color accent4 = const Color(0xFF18212B);
-  late Color success = const Color(0xFF75D3B0);
-  late Color warning = const Color(0xFFFFD47E);
+  late Color accent3 = const Color(0xFF6BBFA3);
+  late Color accent4 = const Color(0xFFF6D776);
+  late Color success = const Color(0xFF6BBFA3);
+  late Color warning = const Color(0xFFF6D776);
   late Color error = const Color(0xFFFF7A78);
-  late Color info = const Color(0xFFA4DCEE);
+  late Color info = const Color(0xFFD0EFFC);
 }
 
 extension TextStyleHelper on TextStyle {

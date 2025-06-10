@@ -81,6 +81,8 @@ class ProfileHeader extends StatelessWidget {
                                 letterSpacing: 0.0,
                                 fontWeight: FontWeight.bold,
                               ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                         ),
                         Text(
                           userEmail,
@@ -94,6 +96,8 @@ class ProfileHeader extends StatelessWidget {
                                 letterSpacing: 0.0,
                                 fontWeight: FontWeight.w500,
                               ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                         ),
                         Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 0.0),
@@ -118,6 +122,8 @@ class ProfileHeader extends StatelessWidget {
                                         letterSpacing: 0.0,
                                         fontWeight: FontWeight.w500,
                                       ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
                                 ),
                               ),
                               Padding(
@@ -134,6 +140,8 @@ class ProfileHeader extends StatelessWidget {
                                         letterSpacing: 0.0,
                                         fontWeight: FontWeight.w500,
                                       ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
                                 ),
                               ),
                             ],
