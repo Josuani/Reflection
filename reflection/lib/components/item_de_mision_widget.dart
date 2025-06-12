@@ -82,75 +82,94 @@ class _ItemDeMisionWidgetState extends State<ItemDeMisionWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final String title = widget.mission['title'] ?? '';
+    final String description = widget.mission['description'] ?? '';
+    final String categoria = widget.mission['categoria'] ?? '';
+    final String imgCategoria = widget.mission['imgCategoria'] ?? 'assets/images/pixel_brain.png'; // Imagen por defecto
+    final String repeat = widget.mission['repeat'] ?? 'única';
+    final String? startDateTimeStr = widget.mission['startDateTime'];
+    final String? endDateTimeStr = widget.mission['endDateTime'];
+    DateTime? startDateTime = startDateTimeStr != null ? DateTime.tryParse(startDateTimeStr) : null;
+    DateTime? endDateTime = endDateTimeStr != null ? DateTime.tryParse(endDateTimeStr) : null;
+    String formatDate(DateTime? dt) {
+      if (dt == null) return '';
+      return '${dt.day.toString().padLeft(2, '0')}/${dt.month.toString().padLeft(2, '0')}/${dt.year} ${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
+    }
+    final Color mainTextColor = Colors.white;
+    final Color detailTextColor = Colors.grey[300]!;
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final bool isMobile = screenWidth < 400;
+    final double imageSize = isMobile ? 32 : 48;
+    final double titleFontSize = isMobile ? 16 : 22;
+    final double descFontSize = isMobile ? 12 : 15;
+    final double detailFontSize = isMobile ? 10 : 12;
+    final double cardPadding = isMobile ? 10 : 16;
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
+      color: const Color(0xFF393939), // Fondo oscuro para la tarjeta
       child: Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        padding: EdgeInsets.all(cardPadding),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.mission['title'],
-                        style: FlutterFlowTheme.of(context).titleMedium.override(
-                              font: GoogleFonts.pressStart2p(
-                                fontWeight: FontWeight.w600,
-                              ),
-                              fontSize: 16,
-                            ),
-                      ),
-                      SizedBox(height: 4),
-                      if (widget.mission['categoria'] != null && widget.mission['imgCategoria'] != null)
-                        Row(
-                          children: [
-                            Image.asset(
-                              widget.mission['imgCategoria'],
-                              width: 24,
-                              height: 24,
-                            ),
-                            SizedBox(width: 8),
-                            Text(
-                              widget.mission['categoria'],
-                              style: GoogleFonts.pressStart2p(fontSize: 10, fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: _getStatusColor().withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    _getStatusText(),
-                    style: TextStyle(
-                      color: _getStatusColor(),
-                      fontWeight: FontWeight.bold,
+            // Imagen grande de la categoría
+            Image.asset(
+              imgCategoria,
+              width: imageSize,
+              height: imageSize,
+            ),
+            SizedBox(width: isMobile ? 10 : 20),
+            // Título, descripción y duración
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: GoogleFonts.pressStart2p(
+                      fontWeight: FontWeight.w700,
+                      fontSize: titleFontSize,
+                      color: mainTextColor,
                     ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-              ],
+                  SizedBox(height: isMobile ? 4 : 10),
+                  Text(
+                    description,
+                    style: GoogleFonts.pressStart2p(
+                      fontSize: descFontSize,
+                      color: mainTextColor,
+                    ),
+                    maxLines: isMobile ? 2 : 3,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  if (startDateTime != null || endDateTime != null)
+                    Padding(
+                      padding: EdgeInsets.only(top: isMobile ? 4 : 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (startDateTime != null)
+                            Text('Inicio: ${formatDate(startDateTime)}', style: GoogleFonts.pressStart2p(fontSize: detailFontSize, color: detailTextColor)),
+                          if (endDateTime != null)
+                            Text('Fin: ${formatDate(endDateTime)}', style: GoogleFonts.pressStart2p(fontSize: detailFontSize, color: detailTextColor)),
+                        ],
+                      ),
+                    ),
+                  Padding(
+                    padding: EdgeInsets.only(top: isMobile ? 2 : 4),
+                    child: Text('Repetición: $repeat', style: GoogleFonts.pressStart2p(fontSize: detailFontSize, color: detailTextColor)),
+                  ),
+                ],
+              ),
             ),
-            SizedBox(height: 8),
-            Text(
-              widget.mission['description'],
-              style: FlutterFlowTheme.of(context).bodyMedium,
-            ),
-            SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            // Botones de acción a la derecha
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (widget.mission['status'] == 'disponible')
                   ElevatedButton(
@@ -158,6 +177,8 @@ class _ItemDeMisionWidgetState extends State<ItemDeMisionWidget> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: _getStatusColor(),
                       foregroundColor: Colors.white,
+                      padding: EdgeInsets.symmetric(horizontal: isMobile ? 8 : 16, vertical: isMobile ? 6 : 10),
+                      textStyle: GoogleFonts.pressStart2p(fontSize: isMobile ? 10 : 12),
                     ),
                     child: Text('Iniciar'),
                   ),
@@ -167,11 +188,13 @@ class _ItemDeMisionWidgetState extends State<ItemDeMisionWidget> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: _getStatusColor(),
                       foregroundColor: Colors.white,
+                      padding: EdgeInsets.symmetric(horizontal: isMobile ? 8 : 16, vertical: isMobile ? 6 : 10),
+                      textStyle: GoogleFonts.pressStart2p(fontSize: isMobile ? 10 : 12),
                     ),
                     child: Text('Completar'),
                   ),
                 IconButton(
-                  icon: Icon(Icons.delete, color: Colors.red),
+                  icon: Icon(Icons.delete, color: Colors.red, size: isMobile ? 18 : 24),
                   onPressed: () => widget.onDelete(widget.mission['id']),
                 ),
               ],

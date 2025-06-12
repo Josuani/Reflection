@@ -37,7 +37,7 @@ class MissionService {
   Future<String> createMission(Map<String, dynamic> missionData) async {
     final docRef = await _firestore.collection(_collection).add({
       ...missionData,
-      'status': 'disponible',
+      if (!missionData.containsKey('status')) 'status': 'disponible',
       'createdAt': FieldValue.serverTimestamp(),
     });
     return docRef.id;

@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'misiones2_model.dart';
+import '../home_page/home_page_widget.dart';
+import 'package:go_router/go_router.dart';
 export 'misiones2_model.dart';
 
 /// intento a mano de misiones
@@ -92,12 +94,21 @@ class _Misiones2WidgetState extends State<Misiones2Widget>
     });
   }
 
-  Future<void> _handleMissionComplete(String missionId) async {
+  Future<void> _handleChangeMissionStatus(String missionId, String newStatus) async {
+    print('Intentando cambiar el estado de la misión $missionId a $newStatus');
     try {
-      await _missionService.updateMissionStatus(missionId, 'completado');
+      await _missionService.updateMissionStatus(missionId, newStatus);
+      print('Estado actualizado correctamente en Firestore');
+      // Navegar a la página de inicio después de completar
+      if (newStatus == 'completado') {
+        if (mounted) {
+          context.go('/');
+        }
+      }
     } catch (e) {
+      print('Error al cambiar el estado: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al completar la misión: $e')),
+        SnackBar(content: Text('Error al cambiar el estado: $e')),
       );
     }
   }
@@ -189,92 +200,196 @@ class _Misiones2WidgetState extends State<Misiones2Widget>
   void _showMissionDetailsDialog(BuildContext context, Map<String, dynamic> categoria) {
     final titleController = TextEditingController();
     final descriptionController = TextEditingController();
+    DateTime? startDateTime;
+    DateTime? endDateTime;
+    String repeat = 'única';
+    final repeatOptions = ['única', 'diaria', 'semanal', 'quincenal', 'mensual'];
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Nueva Misión', style: GoogleFonts.pressStart2p(fontWeight: FontWeight.bold, fontSize: 14)),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Image.asset(categoria['img'], width: 32, height: 32),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      categoria['nombre'],
-                      style: GoogleFonts.pressStart2p(fontSize: 12, fontWeight: FontWeight.bold),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: Text('Nueva Misión', style: GoogleFonts.pressStart2p(fontWeight: FontWeight.bold, fontSize: 14)),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Image.asset(categoria['img'], width: 32, height: 32),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        categoria['nombre'],
+                        style: GoogleFonts.pressStart2p(fontSize: 12, fontWeight: FontWeight.bold),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
                     ),
+                  ],
+                ),
+                SizedBox(height: 16),
+                TextField(
+                  controller: titleController,
+                  style: GoogleFonts.pressStart2p(fontSize: 12),
+                  decoration: InputDecoration(
+                    labelText: 'Título',
+                    labelStyle: GoogleFonts.pressStart2p(fontSize: 12),
+                    border: OutlineInputBorder(),
                   ),
-                ],
-              ),
-              SizedBox(height: 16),
-              TextField(
-                controller: titleController,
-                style: GoogleFonts.pressStart2p(fontSize: 12),
-                decoration: InputDecoration(
-                  labelText: 'Título',
-                  labelStyle: GoogleFonts.pressStart2p(fontSize: 12),
-                  border: OutlineInputBorder(),
                 ),
-              ),
-              SizedBox(height: 16),
-              TextField(
-                controller: descriptionController,
-                style: GoogleFonts.pressStart2p(fontSize: 12),
-                decoration: InputDecoration(
-                  labelText: 'Descripción',
-                  labelStyle: GoogleFonts.pressStart2p(fontSize: 12),
-                  border: OutlineInputBorder(),
+                SizedBox(height: 16),
+                TextField(
+                  controller: descriptionController,
+                  style: GoogleFonts.pressStart2p(fontSize: 12),
+                  decoration: InputDecoration(
+                    labelText: 'Descripción',
+                    labelStyle: GoogleFonts.pressStart2p(fontSize: 12),
+                    border: OutlineInputBorder(),
+                  ),
+                  maxLines: 3,
                 ),
-                maxLines: 3,
-              ),
-            ],
+                SizedBox(height: 16),
+                // Selector de fecha/hora de inicio
+                Row(
+                  children: [
+                    Expanded(child: Text('Inicio:', style: GoogleFonts.pressStart2p(fontSize: 12))),
+                    TextButton(
+                      onPressed: () async {
+                        final picked = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2020),
+                          lastDate: DateTime(2100),
+                        );
+                        if (picked != null) {
+                          final pickedTime = await showTimePicker(
+                            context: context,
+                            initialTime: TimeOfDay.fromDateTime(DateTime.now()),
+                          );
+                          if (pickedTime != null) {
+                            setState(() {
+                              startDateTime = DateTime(
+                                picked.year,
+                                picked.month,
+                                picked.day,
+                                pickedTime.hour,
+                                pickedTime.minute,
+                              );
+                            });
+                          }
+                        }
+                      },
+                      child: Text(
+                        startDateTime != null
+                          ? '${startDateTime!.day}/${startDateTime!.month}/${startDateTime!.year} ${startDateTime!.hour.toString().padLeft(2, '0')}:${startDateTime!.minute.toString().padLeft(2, '0')}'
+                          : 'Seleccionar',
+                        style: GoogleFonts.pressStart2p(fontSize: 12),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 8),
+                // Selector de fecha/hora de fin
+                Row(
+                  children: [
+                    Expanded(child: Text('Fin:', style: GoogleFonts.pressStart2p(fontSize: 12))),
+                    TextButton(
+                      onPressed: () async {
+                        final picked = await showDatePicker(
+                          context: context,
+                          initialDate: startDateTime ?? DateTime.now(),
+                          firstDate: DateTime(2020),
+                          lastDate: DateTime(2100),
+                        );
+                        if (picked != null) {
+                          final pickedTime = await showTimePicker(
+                            context: context,
+                            initialTime: TimeOfDay.fromDateTime(startDateTime ?? DateTime.now()),
+                          );
+                          if (pickedTime != null) {
+                            setState(() {
+                              endDateTime = DateTime(
+                                picked.year,
+                                picked.month,
+                                picked.day,
+                                pickedTime.hour,
+                                pickedTime.minute,
+                              );
+                            });
+                          }
+                        }
+                      },
+                      child: Text(
+                        endDateTime != null
+                          ? '${endDateTime!.day}/${endDateTime!.month}/${endDateTime!.year} ${endDateTime!.hour.toString().padLeft(2, '0')}:${endDateTime!.minute.toString().padLeft(2, '0')}'
+                          : 'Seleccionar',
+                        style: GoogleFonts.pressStart2p(fontSize: 12),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 8),
+                // Dropdown de repetición
+                Row(
+                  children: [
+                    Expanded(child: Text('Repetir:', style: GoogleFonts.pressStart2p(fontSize: 12))),
+                    DropdownButton<String>(
+                      value: repeat,
+                      items: repeatOptions.map((opt) => DropdownMenuItem(
+                        value: opt,
+                        child: Text(opt, style: GoogleFonts.pressStart2p(fontSize: 12)),
+                      )).toList(),
+                      onChanged: (val) => setState(() => repeat = val ?? 'única'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              _showAddMissionDialog(context);
-            },
-            child: Text('Atrás', style: GoogleFonts.pressStart2p(fontSize: 12)),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('Cancelar', style: GoogleFonts.pressStart2p(fontSize: 12)),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              if (titleController.text.isNotEmpty) {
-                try {
-                  final tabIndex = _tabController.index;
-                  String initialStatus = 'disponible';
-                  if (tabIndex == 1) initialStatus = 'en_progreso';
-                  if (tabIndex == 2) initialStatus = 'completado';
-                  await _missionService.createMission({
-                    'title': titleController.text,
-                    'description': descriptionController.text,
-                    'status': initialStatus,
-                    'categoria': categoria['nombre'],
-                    'imgCategoria': categoria['img'],
-                    'fechaCreacion': DateTime.now().toIso8601String(),
-                  });
-                  Navigator.pop(context);
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Error al crear la misión: $e')),
-                  );
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                _showAddMissionDialog(context);
+              },
+              child: Text('Atrás', style: GoogleFonts.pressStart2p(fontSize: 12)),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('Cancelar', style: GoogleFonts.pressStart2p(fontSize: 12)),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                if (titleController.text.isNotEmpty) {
+                  try {
+                    final tabIndex = _tabController.index;
+                    String initialStatus = 'disponible';
+                    if (tabIndex == 1) initialStatus = 'en_progreso';
+                    if (tabIndex == 2) initialStatus = 'completado';
+                    await _missionService.createMission({
+                      'title': titleController.text,
+                      'description': descriptionController.text,
+                      'status': initialStatus,
+                      'categoria': categoria['nombre'],
+                      'imgCategoria': categoria['img'],
+                      'fechaCreacion': DateTime.now().toIso8601String(),
+                      'startDateTime': startDateTime?.toIso8601String(),
+                      'endDateTime': endDateTime?.toIso8601String(),
+                      'repeat': repeat,
+                    });
+                    Navigator.pop(context);
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Error al crear la misión: $e')),
+                    );
+                  }
                 }
-              }
-            },
-            child: Text('Crear', style: GoogleFonts.pressStart2p(fontSize: 12)),
-          ),
-        ],
+              },
+              child: Text('Crear', style: GoogleFonts.pressStart2p(fontSize: 12)),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -327,16 +442,22 @@ class _Misiones2WidgetState extends State<Misiones2Widget>
               missions: _availableMissions,
               emptyText: 'No hay misiones disponibles',
               theme: theme,
+              onChangeStatus: _handleChangeMissionStatus,
+              onDelete: _handleMissionDelete,
             ),
             _MissionList(
               missions: _inProgressMissions,
               emptyText: 'No tienes misiones en progreso',
               theme: theme,
+              onChangeStatus: _handleChangeMissionStatus,
+              onDelete: _handleMissionDelete,
             ),
             _MissionList(
               missions: _completedMissions,
               emptyText: 'No has completado misiones',
               theme: theme,
+              onChangeStatus: _handleChangeMissionStatus,
+              onDelete: _handleMissionDelete,
             ),
           ],
         ),
@@ -359,7 +480,15 @@ class _MissionList extends StatelessWidget {
   final List<Map<String, dynamic>> missions;
   final String emptyText;
   final FlutterFlowTheme theme;
-  const _MissionList({required this.missions, required this.emptyText, required this.theme});
+  final Function(String, String) onChangeStatus;
+  final Function(String) onDelete;
+  const _MissionList({
+    required this.missions,
+    required this.emptyText,
+    required this.theme,
+    required this.onChangeStatus,
+    required this.onDelete,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -376,53 +505,10 @@ class _MissionList extends StatelessWidget {
       separatorBuilder: (_, __) => const SizedBox(height: 18),
       itemBuilder: (context, i) {
         final m = missions[i];
-        return Container(
-          padding: const EdgeInsets.all(18),
-          decoration: BoxDecoration(
-            color: theme.secondaryBackground,
-            border: Border.all(color: theme.accent2, width: 3),
-            borderRadius: BorderRadius.circular(14),
-            boxShadow: [
-              BoxShadow(
-                color: theme.accent2.withOpacity(0.08),
-                blurRadius: 6,
-                offset: Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(Icons.flag, color: theme.secondary, size: 36),
-              const SizedBox(width: 18),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      m['title'] ?? 'Misión',
-                      style: theme.titleMedium.copyWith(color: theme.accent1, letterSpacing: 1.2),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      m['description'] ?? '',
-                      style: theme.bodyMedium.copyWith(color: theme.secondaryText),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 12),
-              Column(
-                children: [
-                  Icon(Icons.chevron_right, color: theme.secondaryText),
-                ],
-              ),
-            ],
-          ),
+        return ItemDeMisionWidget(
+          mission: m,
+          onChangeStatus: onChangeStatus,
+          onDelete: onDelete,
         );
       },
     );
