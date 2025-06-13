@@ -476,12 +476,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   size: 24,
                 ),
                 onPressed: () async {
-                  final updated = await Navigator.push<bool>(
-                    context,
-                    MaterialPageRoute(builder: (_) => ProfilePageWidget()),
-                  );
+                  final updated = await context.pushNamed<bool>('editarPerfil');
                   if (updated == true) {
-                    // Solo si el usuario guardó cambios, refrescamos:
                     await DatabaseService.instance.readUsuario(DatabaseService.instance.currentUserId);
                     setState(() {});
                   }

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '/pages/home_page/home_page_widget.dart';
 import '/pages/misiones2/misiones2_widget.dart';
 import '/pages/perfil/perfil_widget.dart';
+import '/modales/editar_perfil/editar_perfil_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/components/sidebar/sidebar.dart';
 import '/components/sidebar/sidebar_model.dart';

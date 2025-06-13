@@ -46,6 +46,12 @@ class LoginReflectionModel extends FlutterFlowModel<LoginReflectionWidget> {
   TextEditingController? loginPasswordTextController;
   late bool loginPasswordVisibility;
   String? Function(BuildContext, String?)? loginPasswordTextControllerValidator;
+  // State field(s) for Signup-Name widget.
+  FocusNode? signupNameFocusNode;
+  TextEditingController? signupNameTextController;
+  // State field(s) for Signup-Description widget.
+  FocusNode? signupDescFocusNode;
+  TextEditingController? signupDescTextController;
 
   @override
   void initState(BuildContext context) {
@@ -71,5 +77,10 @@ class LoginReflectionModel extends FlutterFlowModel<LoginReflectionWidget> {
 
     loginPasswordFocusNode?.dispose();
     loginPasswordTextController?.dispose();
+
+    signupNameTextController?.dispose();
+    signupNameFocusNode?.dispose();
+    signupDescTextController?.dispose();
+    signupDescFocusNode?.dispose();
   }
 }

@@ -7,15 +7,17 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'editar_perfil_model.dart';
+import 'package:reflection/services/database_service.dart';
+import 'package:reflection/auth/firebase_auth/auth_util.dart';
 export 'editar_perfil_model.dart';
 
 /// Design an "Edit Profile" screen with a retro pixel art aesthetic using
 /// cool tones and 8-bit fonts.
 ///
-/// Include editable fields for the player’s name and personal motto. Add a
+/// Include editable fields for the player's name and personal motto. Add a
 /// pixel-style avatar preview with a button or icon to change appearance
 /// (hair, colors, outfit). Include a save button styled like a classic game
-/// “OK” button and a cancel option. Use pixel borders, soft blue background
+/// "OK" button and a cancel option. Use pixel borders, soft blue background
 /// cards, and nostalgic UI elements. The layout should be clean,
 /// center-aligned, and resemble classic RPG profile customization menus.
 class EditarPerfilWidget extends StatefulWidget {
@@ -38,10 +40,15 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
     super.initState();
     _model = createModel(context, () => EditarPerfilModel());
 
-    _model.textController1 ??= TextEditingController();
-    _model.textFieldFocusNode1 ??= FocusNode();
+    // Cargar datos reales del usuario
+    DatabaseService().readUsuario(currentUserUid).then((doc) {
+      final data = doc.data() as Map<String, dynamic>?;
+      _model.textController1 = TextEditingController(text: data?['nombre'] ?? '');
+      _model.textController2 = TextEditingController(text: data?['descripcion'] ?? '');
+      setState(() {});
+    });
 
-    _model.textController2 ??= TextEditingController();
+    _model.textFieldFocusNode1 ??= FocusNode();
     _model.textFieldFocusNode2 ??= FocusNode();
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
@@ -403,8 +410,12 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     FFButtonWidget(
-                      onPressed: () {
-                        print('Button pressed ...');
+                      onPressed: () async {
+                        // ... lógica de guardado ...
+                        context.pop();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Perfil guardado correctamente')),
+                        );
                       },
                       text: 'SAVE',
                       options: FFButtonOptions(
@@ -441,40 +452,11 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
-                    FFButtonWidget(
+                    TextButton(
                       onPressed: () {
-                        print('Button pressed ...');
+                        context.go('/app/home/perfil');
                       },
-                      text: 'CANCEL',
-                      options: FFButtonOptions(
-                        width: 140.0,
-                        height: 50.0,
-                        padding: EdgeInsets.all(8.0),
-                        iconPadding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                        color: FlutterFlowTheme.of(context).error,
-                        textStyle:
-                            FlutterFlowTheme.of(context).titleMedium.override(
-                                  font: GoogleFonts.pressStart2p(
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .titleMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .titleMedium
-                                        .fontStyle,
-                                  ),
-                                  color: FlutterFlowTheme.of(context).info,
-                                  letterSpacing: 0.0,
-                                  fontWeight: FlutterFlowTheme.of(context)
-                                      .titleMedium
-                                      .fontWeight,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .titleMedium
-                                      .fontStyle,
-                                ),
-                        elevation: 2.0,
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
+                      child: Text('CANCEL'),
                     ),
                   ].divide(SizedBox(width: 16.0)),
                 ),

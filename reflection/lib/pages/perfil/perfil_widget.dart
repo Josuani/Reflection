@@ -15,6 +15,8 @@ import 'widgets/profile_achievements.dart';
 import 'widgets/profile_settings.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:reflection/services/database_service.dart';
+import 'package:reflection/auth/firebase_auth/auth_util.dart';
 export 'perfil_model.dart';
 
 /// Design a user profile screen with a retro, pixel art aesthetic.
@@ -39,8 +41,7 @@ class PerfilWidget extends StatefulWidget {
 class _PerfilWidgetState extends State<PerfilWidget> {
   late PerfilModel _model;
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  String userName = 'John Doe';
-  String userMotto = '¡A por todas!';
+  Key _futureKey = UniqueKey();
   int level = 5;
   int experience = 1250;
   int xpToNextLevel = 1500;
@@ -92,6 +93,15 @@ class _PerfilWidgetState extends State<PerfilWidget> {
     super.dispose();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Si volvemos de editar perfil, forzamos refresco
+    setState(() {
+      _futureKey = UniqueKey();
+    });
+  }
+
   void _handleNotificationsChanged(bool value) {
     setState(() {
       _model.notificationsEnabled = value;
@@ -121,48 +131,6 @@ class _PerfilWidgetState extends State<PerfilWidget> {
     }
   }
 
-  void _editName() async {
-    final controller = TextEditingController(text: userName);
-    final result = await showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Editar nombre'),
-        content: TextField(
-          controller: controller,
-          decoration: InputDecoration(hintText: 'Nombre'),
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: Text('Cancelar')),
-          ElevatedButton(onPressed: () => Navigator.pop(context, controller.text), child: Text('Guardar')),
-        ],
-      ),
-    );
-    if (result != null && result.trim().isNotEmpty) {
-      setState(() => userName = result.trim());
-    }
-  }
-
-  void _editMotto() async {
-    final controller = TextEditingController(text: userMotto);
-    final result = await showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Editar lema'),
-        content: TextField(
-          controller: controller,
-          decoration: InputDecoration(hintText: 'Lema personal'),
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: Text('Cancelar')),
-          ElevatedButton(onPressed: () => Navigator.pop(context, controller.text), child: Text('Guardar')),
-        ],
-      ),
-    );
-    if (result != null && result.trim().isNotEmpty) {
-      setState(() => userMotto = result.trim());
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = FlutterFlowTheme.of(context);
@@ -172,192 +140,191 @@ class _PerfilWidgetState extends State<PerfilWidget> {
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: theme.primaryBackground,
+        appBar: AppBar(
+          backgroundColor: FlutterFlowTheme.of(context).primary,
+          elevation: 2,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            color: Colors.white,
+            onPressed: () {
+              context.go('/app/home');
+            },
+          ),
+          title: Text(
+            'Perfil',
+            style: FlutterFlowTheme.of(context).headlineMedium.override(
+              fontFamily: 'Outfit',
+              color: Colors.white,
+              fontSize: 22,
+            ),
+          ),
+        ),
         body: SafeArea(
           top: true,
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // Header editable
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: theme.secondaryBackground,
-                      border: Border.all(color: theme.accent2, width: 4),
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: theme.accent2.withOpacity(0.2),
-                          blurRadius: 8,
-                          offset: Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Stack(
-                          children: [
-                            CircleAvatar(
-                              radius: 44,
-                              backgroundImage: avatarFile != null
-                                  ? FileImage(avatarFile!)
-                                  : const AssetImage('assets/images/me.jpg') as ImageProvider,
+          child: FutureBuilder(
+            key: _futureKey,
+            future: DatabaseService().readUsuario(currentUserUid),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.hasError) {
+                return Center(child: Text('Error al cargar perfil'));
+              }
+              final userData = snapshot.data?.data() as Map<String, dynamic>?;
+              final userName = (userData?['nombre'] ?? '').toString().trim().isEmpty ? 'Sin nombre' : userData?['nombre'];
+              final userMotto = (userData?['descripcion'] ?? '').toString().trim().isEmpty ? 'Sin descripción' : userData?['descripcion'];
+              return SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // Header editable (solo visual)
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: theme.secondaryBackground,
+                          border: Border.all(color: theme.accent2, width: 4),
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: theme.accent2.withOpacity(0.2),
+                              blurRadius: 8,
+                              offset: Offset(0, 4),
                             ),
-                            Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: GestureDetector(
-                                onTap: _pickAvatar,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: theme.primary,
-                                    shape: BoxShape.circle,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black26,
-                                        blurRadius: 4,
-                                      ),
-                                    ],
-                                  ),
-                                  padding: const EdgeInsets.all(6),
-                                  child: Icon(Icons.edit, size: 18, color: theme.info),
+                          ],
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Stack(
+                              children: [
+                                CircleAvatar(
+                                  radius: 44,
+                                  backgroundImage: avatarFile != null
+                                      ? FileImage(avatarFile!)
+                                      : const AssetImage('assets/images/me.jpg') as ImageProvider,
                                 ),
+                                Positioned(
+                                  bottom: 0,
+                                  right: 0,
+                                  child: GestureDetector(
+                                    onTap: _pickAvatar,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: theme.primary,
+                                        shape: BoxShape.circle,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black26,
+                                            blurRadius: 4,
+                                          ),
+                                        ],
+                                      ),
+                                      padding: const EdgeInsets.all(6),
+                                      child: Icon(Icons.edit, size: 18, color: theme.info),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    userName,
+                                    style: theme.headlineMedium.copyWith(
+                                      color: theme.primary,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    userMotto,
+                                    style: theme.bodyMedium.copyWith(
+                                      color: theme.secondaryText,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(width: 24),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Flexible(
-                                    child: Text(
-                                      userName,
-                                      style: theme.headlineSmall,
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                    ),
-                                  ),
-                                  IconButton(
-                                    icon: Icon(Icons.edit, size: 20, color: theme.primary),
-                                    tooltip: 'Editar nombre',
-                                    onPressed: _editName,
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Flexible(
-                                    child: Text(
-                                      userMotto,
-                                      style: theme.bodyMedium.copyWith(color: theme.secondaryText),
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                    ),
-                                  ),
-                                  IconButton(
-                                    icon: Icon(Icons.edit, size: 18, color: theme.primary),
-                                    tooltip: 'Editar lema',
-                                    onPressed: _editMotto,
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 12),
-                              LinearPercentIndicator(
-                                lineHeight: 16,
-                                percent: xpPercent.clamp(0, 1),
-                                backgroundColor: theme.accent2.withOpacity(0.2),
-                                progressColor: theme.primary,
-                                barRadius: const Radius.circular(8),
-                                center: Text(
-                                  'Nivel $level  ${experience}/$xpToNextLevel XP',
-                                  style: theme.bodySmall.copyWith(fontFamily: 'VT323', color: theme.primaryText),
-                                ),
-                              ),
-                            ],
-                          ),
+                      ),
+                      const SizedBox(height: 16),
+                      // Estadísticas y logros
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          _StatCard(label: 'Reflexiones', value: '30', icon: Icons.edit_note, theme: theme),
+                          _StatCard(label: 'Metas', value: '5', icon: Icons.flag, theme: theme),
+                          _StatCard(label: 'Racha', value: '7', icon: Icons.local_fire_department, theme: theme),
+                        ],
+                      ),
+                      const SizedBox(height: 24),
+                      // Logros
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text('Logros desbloqueados', style: theme.titleMedium.copyWith(fontFamily: 'VT323', color: theme.primary)),
+                      ),
+                      const SizedBox(height: 12),
+                      SizedBox(
+                        height: 120,
+                        child: ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: _achievements.length,
+                          separatorBuilder: (_, __) => const SizedBox(width: 16),
+                          itemBuilder: (context, i) {
+                            final a = _achievements[i];
+                            return _AchievementCard(
+                              title: a['title'],
+                              description: a['description'],
+                              icon: a['icon'],
+                              unlocked: a['isUnlocked'],
+                              xp: a['xpReward'],
+                              theme: theme,
+                            );
+                          },
                         ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  // Estadísticas y logros
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      _StatCard(label: 'Reflexiones', value: '30', icon: Icons.edit_note, theme: theme),
-                      _StatCard(label: 'Metas', value: '5', icon: Icons.flag, theme: theme),
-                      _StatCard(label: 'Racha', value: '7', icon: Icons.local_fire_department, theme: theme),
+                      ),
+                      const SizedBox(height: 32),
+                      // Configuración
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text('Configuración', style: theme.titleMedium.copyWith(fontFamily: 'VT323', color: theme.primary)),
+                      ),
+                      const SizedBox(height: 12),
+                      SwitchListTile(
+                        title: Text('Notificaciones', style: theme.bodyMedium),
+                        value: notificationsEnabled,
+                        onChanged: (v) => setState(() => notificationsEnabled = v),
+                        activeColor: theme.primary,
+                      ),
+                      SwitchListTile(
+                        title: Text('Modo oscuro', style: theme.bodyMedium),
+                        value: darkModeEnabled,
+                        onChanged: (v) => setState(() => darkModeEnabled = v),
+                        activeColor: theme.primary,
+                      ),
+                      const SizedBox(height: 24),
+                      ElevatedButton.icon(
+                        icon: const Icon(Icons.logout),
+                        label: const Text('Cerrar sesión'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: theme.error,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                        ),
+                        onPressed: _handleLogout,
+                      ),
                     ],
                   ),
-                  const SizedBox(height: 24),
-                  // Logros
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text('Logros desbloqueados', style: theme.titleMedium.copyWith(fontFamily: 'VT323', color: theme.primary)),
-                  ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    height: 120,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: _achievements.length,
-                      separatorBuilder: (_, __) => const SizedBox(width: 16),
-                      itemBuilder: (context, i) {
-                        final a = _achievements[i];
-                        return _AchievementCard(
-                          title: a['title'],
-                          description: a['description'],
-                          icon: a['icon'],
-                          unlocked: a['isUnlocked'],
-                          xp: a['xpReward'],
-                          theme: theme,
-                        );
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 32),
-                  // Configuración
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text('Configuración', style: theme.titleMedium.copyWith(fontFamily: 'VT323', color: theme.primary)),
-                  ),
-                  const SizedBox(height: 12),
-                  SwitchListTile(
-                    title: Text('Notificaciones', style: theme.bodyMedium),
-                    value: notificationsEnabled,
-                    onChanged: (v) => setState(() => notificationsEnabled = v),
-                    activeColor: theme.primary,
-                  ),
-                  SwitchListTile(
-                    title: Text('Modo oscuro', style: theme.bodyMedium),
-                    value: darkModeEnabled,
-                    onChanged: (v) => setState(() => darkModeEnabled = v),
-                    activeColor: theme.primary,
-                  ),
-                  const SizedBox(height: 24),
-                  ElevatedButton.icon(
-                    icon: const Icon(Icons.logout),
-                    label: const Text('Cerrar sesión'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: theme.error,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                    ),
-                    onPressed: _handleLogout,
-                  ),
-                ],
-              ),
-            ),
+                ),
+              );
+            },
           ),
         ),
       ),
@@ -464,3 +431,4 @@ class _AchievementCard extends StatelessWidget {
     );
   }
 }
+

@@ -116,6 +116,11 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               path: 'perfil',
               builder: (context, state) => PerfilWidget(),
             ),
+            GoRoute(
+              name: 'editarPerfil',
+              path: 'editarPerfil',
+              builder: (context, state) => EditarPerfilWidget(),
+            ),
           ],
         ),
         FFRoute(
@@ -127,11 +132,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: ConfiguracionWidget.routeName,
           path: ConfiguracionWidget.routePath,
           builder: (context, params) => ConfiguracionWidget(),
-        ).toRoute(appStateNotifier),
-        FFRoute(
-          name: EditarPerfilWidget.routeName,
-          path: EditarPerfilWidget.routePath,
-          builder: (context, params) => EditarPerfilWidget(),
         ).toRoute(appStateNotifier),
         FFRoute(
           name: PagCargaWidget.routeName,

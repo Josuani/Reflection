@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'login_reflection_model.dart';
+import 'package:reflection/services/database_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 export 'login_reflection_model.dart';
 
 /// pag de loguin
@@ -28,6 +30,10 @@ class _LoginReflectionWidgetState extends State<LoginReflectionWidget>
   late LoginReflectionModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  // Variables para mensajes de error
+  String? _nameError;
+  String? _descError;
 
   @override
   void initState() {
@@ -54,6 +60,11 @@ class _LoginReflectionWidgetState extends State<LoginReflectionWidget>
 
     _model.loginPasswordTextController ??= TextEditingController();
     _model.loginPasswordFocusNode ??= FocusNode();
+
+    _model.signupNameTextController ??= TextEditingController();
+    _model.signupNameFocusNode ??= FocusNode();
+    _model.signupDescTextController ??= TextEditingController();
+    _model.signupDescFocusNode ??= FocusNode();
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
@@ -158,26 +169,173 @@ class _LoginReflectionWidgetState extends State<LoginReflectionWidget>
                         child: TabBarView(
                           controller: _model.tabBarController,
                           children: [
-                            Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      8.0, 0.0, 8.0, 0.0),
-                                  child: Container(
+                            SingleChildScrollView(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        8.0, 0.0, 8.0, 0.0),
+                                    child: Container(
+                                      width: double.infinity,
+                                      child: TextFormField(
+                                        controller:
+                                            _model.signupEmailTextController,
+                                        focusNode: _model.signupEmailFocusNode,
+                                        onChanged: (_) => EasyDebounce.debounce(
+                                          '_model.signupEmailTextController',
+                                          Duration(milliseconds: 2000),
+                                          () => safeSetState(() {}),
+                                        ),
+                                        autofocus: false,
+                                        textInputAction: TextInputAction.next,
+                                        obscureText: false,
+                                        decoration: InputDecoration(
+                                          isDense: true,
+                                          labelStyle: FlutterFlowTheme.of(context)
+                                              .labelMedium
+                                              .override(
+                                                font: GoogleFonts.pressStart2p(
+                                                  fontWeight:
+                                                      FlutterFlowTheme.of(context)
+                                                          .labelMedium
+                                                          .fontWeight,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(context)
+                                                          .labelMedium
+                                                          .fontStyle,
+                                                ),
+                                                letterSpacing: 0.0,
+                                                fontWeight:
+                                                    FlutterFlowTheme.of(context)
+                                                        .labelMedium
+                                                        .fontWeight,
+                                                fontStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .labelMedium
+                                                        .fontStyle,
+                                              ),
+                                          hintText: 'Email...',
+                                          hintStyle: FlutterFlowTheme.of(context)
+                                              .labelMedium
+                                              .override(
+                                                font: GoogleFonts.pressStart2p(
+                                                  fontWeight:
+                                                      FlutterFlowTheme.of(context)
+                                                          .labelMedium
+                                                          .fontWeight,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(context)
+                                                          .labelMedium
+                                                          .fontStyle,
+                                                ),
+                                                letterSpacing: 0.0,
+                                                fontWeight:
+                                                    FlutterFlowTheme.of(context)
+                                                        .labelMedium
+                                                        .fontWeight,
+                                                fontStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .labelMedium
+                                                        .fontStyle,
+                                              ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: Color(0x00000000),
+                                              width: 1.0,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: Color(0x00000000),
+                                              width: 1.0,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                          ),
+                                          errorBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: FlutterFlowTheme.of(context)
+                                                  .error,
+                                              width: 1.0,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                          ),
+                                          focusedErrorBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: FlutterFlowTheme.of(context)
+                                                  .error,
+                                              width: 1.0,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                          ),
+                                          filled: true,
+                                          fillColor: FlutterFlowTheme.of(context)
+                                              .secondaryBackground,
+                                          suffixIcon: _model
+                                                  .signupEmailTextController!
+                                                  .text
+                                                  .isNotEmpty
+                                              ? InkWell(
+                                                  onTap: () async {
+                                                    _model
+                                                        .signupEmailTextController
+                                                        ?.clear();
+                                                    safeSetState(() {});
+                                                  },
+                                                  child: Icon(
+                                                    Icons.clear,
+                                                    size: 24.0,
+                                                  ),
+                                                )
+                                              : null,
+                                        ),
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              font: GoogleFonts.pressStart2p(
+                                                fontWeight:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMedium
+                                                        .fontWeight,
+                                                fontStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMedium
+                                                        .fontStyle,
+                                              ),
+                                              letterSpacing: 0.0,
+                                              fontWeight:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontWeight,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontStyle,
+                                            ),
+                                        keyboardType: TextInputType.emailAddress,
+                                        cursorColor: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                        validator: _model
+                                            .signupEmailTextControllerValidator
+                                            .asValidator(context),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
                                     width: double.infinity,
                                     child: TextFormField(
                                       controller:
-                                          _model.signupEmailTextController,
-                                      focusNode: _model.signupEmailFocusNode,
-                                      onChanged: (_) => EasyDebounce.debounce(
-                                        '_model.signupEmailTextController',
-                                        Duration(milliseconds: 2000),
-                                        () => safeSetState(() {}),
-                                      ),
+                                          _model.signupPasswordTextController,
+                                      focusNode: _model.signupPasswordFocusNode,
                                       autofocus: false,
                                       textInputAction: TextInputAction.next,
-                                      obscureText: false,
+                                      obscureText:
+                                          !_model.signupPasswordVisibility,
                                       decoration: InputDecoration(
                                         isDense: true,
                                         labelStyle: FlutterFlowTheme.of(context)
@@ -203,7 +361,7 @@ class _LoginReflectionWidgetState extends State<LoginReflectionWidget>
                                                       .labelMedium
                                                       .fontStyle,
                                             ),
-                                        hintText: 'Email...',
+                                        hintText: 'Password...',
                                         hintStyle: FlutterFlowTheme.of(context)
                                             .labelMedium
                                             .override(
@@ -264,23 +422,21 @@ class _LoginReflectionWidgetState extends State<LoginReflectionWidget>
                                         filled: true,
                                         fillColor: FlutterFlowTheme.of(context)
                                             .secondaryBackground,
-                                        suffixIcon: _model
-                                                .signupEmailTextController!
-                                                .text
-                                                .isNotEmpty
-                                            ? InkWell(
-                                                onTap: () async {
-                                                  _model
-                                                      .signupEmailTextController
-                                                      ?.clear();
-                                                  safeSetState(() {});
-                                                },
-                                                child: Icon(
-                                                  Icons.clear,
-                                                  size: 24.0,
-                                                ),
-                                              )
-                                            : null,
+                                        suffixIcon: InkWell(
+                                          onTap: () => safeSetState(
+                                            () => _model
+                                                    .signupPasswordVisibility =
+                                                !_model.signupPasswordVisibility,
+                                          ),
+                                          focusNode:
+                                              FocusNode(skipTraversal: true),
+                                          child: Icon(
+                                            _model.signupPasswordVisibility
+                                                ? Icons.visibility_outlined
+                                                : Icons.visibility_off_outlined,
+                                            size: 24.0,
+                                          ),
+                                        ),
                                       ),
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
@@ -305,31 +461,40 @@ class _LoginReflectionWidgetState extends State<LoginReflectionWidget>
                                                     .bodyMedium
                                                     .fontStyle,
                                           ),
-                                      keyboardType: TextInputType.emailAddress,
                                       cursorColor: FlutterFlowTheme.of(context)
                                           .primaryText,
                                       validator: _model
-                                          .signupEmailTextControllerValidator
+                                          .signupPasswordTextControllerValidator
                                           .asValidator(context),
                                     ),
                                   ),
-                                ),
-                                Container(
-                                  width: double.infinity,
-                                  child: TextFormField(
-                                    controller:
-                                        _model.signupPasswordTextController,
-                                    focusNode: _model.signupPasswordFocusNode,
-                                    autofocus: false,
-                                    textInputAction: TextInputAction.next,
-                                    obscureText:
-                                        !_model.signupPasswordVisibility,
-                                    decoration: InputDecoration(
-                                      isDense: true,
-                                      labelStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .override(
-                                            font: GoogleFonts.pressStart2p(
+                                  Container(
+                                    width: double.infinity,
+                                    child: TextFormField(
+                                      controller: _model
+                                          .signupConfirmPasswordTextController,
+                                      focusNode:
+                                          _model.signupConfirmPasswordFocusNode,
+                                      autofocus: false,
+                                      textInputAction: TextInputAction.done,
+                                      obscureText:
+                                          !_model.signupConfirmPasswordVisibility,
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        labelStyle: FlutterFlowTheme.of(context)
+                                            .labelMedium
+                                            .override(
+                                              font: GoogleFonts.pressStart2p(
+                                                fontWeight:
+                                                    FlutterFlowTheme.of(context)
+                                                        .labelMedium
+                                                        .fontWeight,
+                                                fontStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .labelMedium
+                                                        .fontStyle,
+                                              ),
+                                              letterSpacing: 0.0,
                                               fontWeight:
                                                   FlutterFlowTheme.of(context)
                                                       .labelMedium
@@ -339,21 +504,21 @@ class _LoginReflectionWidgetState extends State<LoginReflectionWidget>
                                                       .labelMedium
                                                       .fontStyle,
                                             ),
-                                            letterSpacing: 0.0,
-                                            fontWeight:
-                                                FlutterFlowTheme.of(context)
-                                                    .labelMedium
-                                                    .fontWeight,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .labelMedium
-                                                    .fontStyle,
-                                          ),
-                                      hintText: 'Password...',
-                                      hintStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .override(
-                                            font: GoogleFonts.pressStart2p(
+                                        hintText: 'Confirm Password...',
+                                        hintStyle: FlutterFlowTheme.of(context)
+                                            .labelMedium
+                                            .override(
+                                              font: GoogleFonts.pressStart2p(
+                                                fontWeight:
+                                                    FlutterFlowTheme.of(context)
+                                                        .labelMedium
+                                                        .fontWeight,
+                                                fontStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .labelMedium
+                                                        .fontStyle,
+                                              ),
+                                              letterSpacing: 0.0,
                                               fontWeight:
                                                   FlutterFlowTheme.of(context)
                                                       .labelMedium
@@ -363,244 +528,122 @@ class _LoginReflectionWidgetState extends State<LoginReflectionWidget>
                                                       .labelMedium
                                                       .fontStyle,
                                             ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Color(0x00000000),
+                                            width: 1.0,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Color(0x00000000),
+                                            width: 1.0,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                        ),
+                                        errorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: FlutterFlowTheme.of(context)
+                                                .error,
+                                            width: 1.0,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                        ),
+                                        focusedErrorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: FlutterFlowTheme.of(context)
+                                                .error,
+                                            width: 1.0,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                        ),
+                                        filled: true,
+                                        fillColor: FlutterFlowTheme.of(context)
+                                            .secondaryBackground,
+                                        suffixIcon: InkWell(
+                                          onTap: () => safeSetState(
+                                            () => _model
+                                                    .signupConfirmPasswordVisibility =
+                                                !_model
+                                                    .signupConfirmPasswordVisibility,
+                                          ),
+                                          focusNode:
+                                              FocusNode(skipTraversal: true),
+                                          child: Icon(
+                                            _model.signupConfirmPasswordVisibility
+                                                ? Icons.visibility_outlined
+                                                : Icons.visibility_off_outlined,
+                                            size: 24.0,
+                                          ),
+                                        ),
+                                      ),
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            font: GoogleFonts.pressStart2p(
+                                              fontWeight:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontWeight,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontStyle,
+                                            ),
                                             letterSpacing: 0.0,
                                             fontWeight:
                                                 FlutterFlowTheme.of(context)
-                                                    .labelMedium
+                                                    .bodyMedium
                                                     .fontWeight,
                                             fontStyle:
                                                 FlutterFlowTheme.of(context)
-                                                    .labelMedium
+                                                    .bodyMedium
                                                     .fontStyle,
                                           ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0x00000000),
-                                          width: 1.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0x00000000),
-                                          width: 1.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                      ),
-                                      errorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .error,
-                                          width: 1.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                      ),
-                                      focusedErrorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .error,
-                                          width: 1.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                      ),
-                                      filled: true,
-                                      fillColor: FlutterFlowTheme.of(context)
-                                          .secondaryBackground,
-                                      suffixIcon: InkWell(
-                                        onTap: () => safeSetState(
-                                          () => _model
-                                                  .signupPasswordVisibility =
-                                              !_model.signupPasswordVisibility,
-                                        ),
-                                        focusNode:
-                                            FocusNode(skipTraversal: true),
-                                        child: Icon(
-                                          _model.signupPasswordVisibility
-                                              ? Icons.visibility_outlined
-                                              : Icons.visibility_off_outlined,
-                                          size: 24.0,
-                                        ),
-                                      ),
+                                      cursorColor: FlutterFlowTheme.of(context)
+                                          .primaryText,
+                                      validator: _model
+                                          .signupConfirmPasswordTextControllerValidator
+                                          .asValidator(context),
                                     ),
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          font: GoogleFonts.pressStart2p(
-                                            fontWeight:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMedium
-                                                    .fontWeight,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMedium
-                                                    .fontStyle,
-                                          ),
-                                          letterSpacing: 0.0,
-                                          fontWeight:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontWeight,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontStyle,
-                                        ),
-                                    cursorColor: FlutterFlowTheme.of(context)
-                                        .primaryText,
-                                    validator: _model
-                                        .signupPasswordTextControllerValidator
-                                        .asValidator(context),
                                   ),
-                                ),
-                                Container(
-                                  width: double.infinity,
-                                  child: TextFormField(
-                                    controller: _model
-                                        .signupConfirmPasswordTextController,
-                                    focusNode:
-                                        _model.signupConfirmPasswordFocusNode,
-                                    autofocus: false,
-                                    textInputAction: TextInputAction.done,
-                                    obscureText:
-                                        !_model.signupConfirmPasswordVisibility,
-                                    decoration: InputDecoration(
-                                      isDense: true,
-                                      labelStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .override(
-                                            font: GoogleFonts.pressStart2p(
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontStyle,
-                                            ),
-                                            letterSpacing: 0.0,
-                                            fontWeight:
-                                                FlutterFlowTheme.of(context)
-                                                    .labelMedium
-                                                    .fontWeight,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .labelMedium
-                                                    .fontStyle,
-                                          ),
-                                      hintText: 'Confirm Password...',
-                                      hintStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .override(
-                                            font: GoogleFonts.pressStart2p(
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontStyle,
-                                            ),
-                                            letterSpacing: 0.0,
-                                            fontWeight:
-                                                FlutterFlowTheme.of(context)
-                                                    .labelMedium
-                                                    .fontWeight,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .labelMedium
-                                                    .fontStyle,
-                                          ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0x00000000),
-                                          width: 1.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
+                                  Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        8.0, 0.0, 8.0, 0.0),
+                                    child: TextFormField(
+                                      controller: _model.signupNameTextController,
+                                      focusNode: _model.signupNameFocusNode,
+                                      decoration: InputDecoration(
+                                        labelText: 'Nombre de usuario',
+                                        labelStyle: FlutterFlowTheme.of(context)
+                                            .labelMedium,
+                                        errorText: _nameError,
                                       ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0x00000000),
-                                          width: 1.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                      ),
-                                      errorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .error,
-                                          width: 1.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                      ),
-                                      focusedErrorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .error,
-                                          width: 1.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                      ),
-                                      filled: true,
-                                      fillColor: FlutterFlowTheme.of(context)
-                                          .secondaryBackground,
-                                      suffixIcon: InkWell(
-                                        onTap: () => safeSetState(
-                                          () => _model
-                                                  .signupConfirmPasswordVisibility =
-                                              !_model
-                                                  .signupConfirmPasswordVisibility,
-                                        ),
-                                        focusNode:
-                                            FocusNode(skipTraversal: true),
-                                        child: Icon(
-                                          _model.signupConfirmPasswordVisibility
-                                              ? Icons.visibility_outlined
-                                              : Icons.visibility_off_outlined,
-                                          size: 24.0,
-                                        ),
-                                      ),
+                                      textInputAction: TextInputAction.next,
                                     ),
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          font: GoogleFonts.pressStart2p(
-                                            fontWeight:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMedium
-                                                    .fontWeight,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMedium
-                                                    .fontStyle,
-                                          ),
-                                          letterSpacing: 0.0,
-                                          fontWeight:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontWeight,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontStyle,
-                                        ),
-                                    cursorColor: FlutterFlowTheme.of(context)
-                                        .primaryText,
-                                    validator: _model
-                                        .signupConfirmPasswordTextControllerValidator
-                                        .asValidator(context),
                                   ),
-                                ),
-                              ].divide(SizedBox(height: 12.0)),
+                                  Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        8.0, 0.0, 8.0, 0.0),
+                                    child: TextFormField(
+                                      controller: _model.signupDescTextController,
+                                      focusNode: _model.signupDescFocusNode,
+                                      decoration: InputDecoration(
+                                        labelText: 'Descripción',
+                                        labelStyle: FlutterFlowTheme.of(context)
+                                            .labelMedium,
+                                        errorText: _descError,
+                                      ),
+                                      textInputAction: TextInputAction.next,
+                                    ),
+                                  ),
+                                ].divide(SizedBox(height: 12.0)),
+                              ),
                             ),
                             Column(
                               mainAxisSize: MainAxisSize.max,
@@ -970,6 +1013,16 @@ class _LoginReflectionWidgetState extends State<LoginReflectionWidget>
                             return;
                           }
 
+                          final name = _model.signupNameTextController.text.trim();
+                          final desc = _model.signupDescTextController.text.trim();
+                          setState(() {
+                            _nameError = name.isEmpty ? 'El nombre no puede estar vacío' : null;
+                            _descError = desc.isEmpty ? 'La descripción no puede estar vacía' : null;
+                          });
+                          if (_nameError != null || _descError != null) {
+                            return;
+                          }
+
                           final user = await authManager.createAccountWithEmail(
                             context,
                             _model.signupEmailTextController.text,
@@ -979,15 +1032,11 @@ class _LoginReflectionWidgetState extends State<LoginReflectionWidget>
                             return;
                           }
 
-                          await UsersRecord.collection
-                              .doc(user.uid)
-                              .update(createUsersRecordData(
-                                email: valueOrDefault<String>(
-                                  _model.signupEmailTextController.text,
-                                  'example@gmail.com',
-                                ),
-                                createdTime: getCurrentTimestamp,
-                              ));
+                          await FirebaseFirestore.instance.collection('usuarios').doc(user.uid).set({
+                            'nombre': name,
+                            'descripcion': desc,
+                            'email': _model.signupEmailTextController.text.trim(),
+                          });
 
                           context.goNamedAuth(
                               HomePageWidget.routeName, context.mounted);
