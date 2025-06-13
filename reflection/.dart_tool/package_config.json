@@ -2,10 +2,34 @@
   "configVersion": 2,
   "packages": [
     {
+      "name": "_fe_analyzer_shared",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/_fe_analyzer_shared-82.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.5"
+    },
+    {
       "name": "_flutterfire_internals",
-      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/_flutterfire_internals-1.3.55",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/_flutterfire_internals-1.3.35",
       "packageUri": "lib/",
       "languageVersion": "3.2"
+    },
+    {
+      "name": "analyzer",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/analyzer-7.4.5",
+      "packageUri": "lib/",
+      "languageVersion": "3.5"
+    },
+    {
+      "name": "archive",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/archive-4.0.7",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "args",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/args-2.7.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
     },
     {
       "name": "async",
@@ -14,16 +38,58 @@
       "languageVersion": "3.4"
     },
     {
-      "name": "auto_size_text",
-      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/auto_size_text-3.0.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
       "name": "boolean_selector",
       "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/boolean_selector-2.1.2",
       "packageUri": "lib/",
       "languageVersion": "3.1"
+    },
+    {
+      "name": "build",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/build-2.4.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.6"
+    },
+    {
+      "name": "build_config",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/build_config-1.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.6"
+    },
+    {
+      "name": "build_daemon",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/build_daemon-4.0.4",
+      "packageUri": "lib/",
+      "languageVersion": "3.6"
+    },
+    {
+      "name": "build_resolvers",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/build_resolvers-2.4.4",
+      "packageUri": "lib/",
+      "languageVersion": "3.6"
+    },
+    {
+      "name": "build_runner",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/build_runner-2.4.15",
+      "packageUri": "lib/",
+      "languageVersion": "3.6"
+    },
+    {
+      "name": "build_runner_core",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/build_runner_core-8.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.6"
+    },
+    {
+      "name": "built_collection",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/built_collection-5.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "built_value",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/built_value-8.10.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
     },
     {
       "name": "cached_network_image",
@@ -50,6 +116,18 @@
       "languageVersion": "3.4"
     },
     {
+      "name": "checked_yaml",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/checked_yaml-2.0.4",
+      "packageUri": "lib/",
+      "languageVersion": "3.8"
+    },
+    {
+      "name": "cli_util",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/cli_util-0.4.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
       "name": "clock",
       "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/clock-1.1.2",
       "packageUri": "lib/",
@@ -57,25 +135,49 @@
     },
     {
       "name": "cloud_firestore",
-      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/cloud_firestore-5.6.8",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/cloud_firestore-4.17.5",
       "packageUri": "lib/",
-      "languageVersion": "3.2"
+      "languageVersion": "2.18"
     },
     {
       "name": "cloud_firestore_platform_interface",
-      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/cloud_firestore_platform_interface-6.6.8",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/cloud_firestore_platform_interface-6.2.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "cloud_firestore_web",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/cloud_firestore_web-3.12.5",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
     {
-      "name": "cloud_firestore_web",
-      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/cloud_firestore_web-4.4.8",
+      "name": "code_builder",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/code_builder-4.10.1",
       "packageUri": "lib/",
-      "languageVersion": "3.4"
+      "languageVersion": "3.5"
     },
     {
       "name": "collection",
       "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/collection-1.19.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "connectivity_plus",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/connectivity_plus-5.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "connectivity_plus_platform_interface",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/connectivity_plus_platform_interface-1.2.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "convert",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/convert-3.1.2",
       "packageUri": "lib/",
       "languageVersion": "3.4"
     },
@@ -98,10 +200,16 @@
       "languageVersion": "3.1"
     },
     {
-      "name": "easy_debounce",
-      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/easy_debounce-2.0.3",
+      "name": "dart_style",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/dart_style-3.1.0",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "3.7"
+    },
+    {
+      "name": "dbus",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/dbus-0.7.11",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
     },
     {
       "name": "fake_async",
@@ -146,28 +254,46 @@
       "languageVersion": "3.4"
     },
     {
-      "name": "firebase_auth",
-      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/firebase_auth-5.5.4",
+      "name": "firebase_analytics",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/firebase_analytics-10.10.7",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "firebase_analytics_platform_interface",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/firebase_analytics_platform_interface-3.10.8",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "firebase_analytics_web",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/firebase_analytics_web-0.5.7+7",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
     {
+      "name": "firebase_auth",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/firebase_auth-4.16.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
       "name": "firebase_auth_platform_interface",
-      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/firebase_auth_platform_interface-7.6.3",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/firebase_auth_platform_interface-7.3.0",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
     {
       "name": "firebase_auth_web",
-      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/firebase_auth_web-5.14.3",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/firebase_auth_web-5.8.13",
       "packageUri": "lib/",
-      "languageVersion": "3.4"
+      "languageVersion": "2.18"
     },
     {
       "name": "firebase_core",
-      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/firebase_core-3.13.1",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/firebase_core-2.32.0",
       "packageUri": "lib/",
-      "languageVersion": "3.2"
+      "languageVersion": "2.18"
     },
     {
       "name": "firebase_core_platform_interface",
@@ -182,22 +308,22 @@
       "languageVersion": "3.4"
     },
     {
-      "name": "firebase_performance",
-      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/firebase_performance-0.10.1+6",
+      "name": "firebase_storage",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/firebase_storage-11.6.5",
       "packageUri": "lib/",
-      "languageVersion": "3.2"
+      "languageVersion": "2.18"
     },
     {
-      "name": "firebase_performance_platform_interface",
-      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/firebase_performance_platform_interface-0.1.5+6",
+      "name": "firebase_storage_platform_interface",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/firebase_storage_platform_interface-5.1.22",
       "packageUri": "lib/",
-      "languageVersion": "3.2"
+      "languageVersion": "2.18"
     },
     {
-      "name": "firebase_performance_web",
-      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/firebase_performance_web-0.1.7+12",
+      "name": "firebase_storage_web",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/firebase_storage_web-3.6.22",
       "packageUri": "lib/",
-      "languageVersion": "3.4"
+      "languageVersion": "2.18"
     },
     {
       "name": "fixnum",
@@ -212,22 +338,22 @@
       "languageVersion": "3.7"
     },
     {
-      "name": "flutter_animate",
-      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/flutter_animate-4.5.2",
-      "packageUri": "lib/",
-      "languageVersion": "2.17"
-    },
-    {
       "name": "flutter_cache_manager",
       "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/flutter_cache_manager-3.4.1",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
     {
-      "name": "flutter_lints",
-      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/flutter_lints-2.0.3",
+      "name": "flutter_launcher_icons",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/flutter_launcher_icons-0.13.1",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "flutter_lints",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/flutter_lints-3.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
     },
     {
       "name": "flutter_localizations",
@@ -242,10 +368,46 @@
       "languageVersion": "3.6"
     },
     {
-      "name": "flutter_shaders",
-      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/flutter_shaders-0.1.3",
+      "name": "flutter_riverpod",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/flutter_riverpod-2.6.1",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "flutter_secure_storage",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/flutter_secure_storage-9.2.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_secure_storage_linux",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/flutter_secure_storage_linux-1.2.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_secure_storage_macos",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/flutter_secure_storage_macos-3.1.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_secure_storage_platform_interface",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/flutter_secure_storage_platform_interface-1.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_secure_storage_web",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/flutter_secure_storage_web-1.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_secure_storage_windows",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/flutter_secure_storage_windows-3.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "flutter_test",
@@ -260,16 +422,16 @@
       "languageVersion": "3.7"
     },
     {
-      "name": "font_awesome_flutter",
-      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/font_awesome_flutter-10.8.0",
+      "name": "frontend_server_client",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/frontend_server_client-4.0.0",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
     {
-      "name": "from_css_color",
-      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/from_css_color-2.0.0",
+      "name": "glob",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/glob-2.1.3",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "3.3"
     },
     {
       "name": "go_router",
@@ -284,52 +446,34 @@
       "languageVersion": "2.14"
     },
     {
-      "name": "google_identity_services_web",
-      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/google_identity_services_web-0.3.3+1",
-      "packageUri": "lib/",
-      "languageVersion": "3.4"
-    },
-    {
-      "name": "google_sign_in",
-      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/google_sign_in-6.3.0",
-      "packageUri": "lib/",
-      "languageVersion": "3.6"
-    },
-    {
-      "name": "google_sign_in_android",
-      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/google_sign_in_android-6.2.1",
-      "packageUri": "lib/",
-      "languageVersion": "3.6"
-    },
-    {
-      "name": "google_sign_in_ios",
-      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/google_sign_in_ios-5.9.0",
-      "packageUri": "lib/",
-      "languageVersion": "3.4"
-    },
-    {
-      "name": "google_sign_in_platform_interface",
-      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/google_sign_in_platform_interface-2.5.0",
-      "packageUri": "lib/",
-      "languageVersion": "3.4"
-    },
-    {
-      "name": "google_sign_in_web",
-      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/google_sign_in_web-0.12.4+4",
+      "name": "graphs",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/graphs-2.3.2",
       "packageUri": "lib/",
       "languageVersion": "3.4"
     },
     {
       "name": "http",
-      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/http-1.2.2",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/http-1.4.0",
       "packageUri": "lib/",
-      "languageVersion": "3.3"
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "http_multi_server",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/http_multi_server-3.2.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
     },
     {
       "name": "http_parser",
       "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/http_parser-4.1.2",
       "packageUri": "lib/",
       "languageVersion": "3.4"
+    },
+    {
+      "name": "image",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/image-4.5.4",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
     },
     {
       "name": "image_picker",
@@ -386,10 +530,10 @@
       "languageVersion": "3.3"
     },
     {
-      "name": "iregexp",
-      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/iregexp-0.1.2",
+      "name": "io",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/io-1.0.5",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.4"
     },
     {
       "name": "js",
@@ -398,8 +542,8 @@
       "languageVersion": "2.19"
     },
     {
-      "name": "json_path",
-      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/json_path-0.7.6",
+      "name": "json_annotation",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/json_annotation-4.9.0",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -423,9 +567,15 @@
     },
     {
       "name": "lints",
-      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/lints-2.1.1",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/lints-3.0.0",
       "packageUri": "lib/",
       "languageVersion": "3.0"
+    },
+    {
+      "name": "logger",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/logger-2.5.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
     },
     {
       "name": "logging",
@@ -446,12 +596,6 @@
       "languageVersion": "2.17"
     },
     {
-      "name": "maybe_just_nothing",
-      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/maybe_just_nothing-0.5.3",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
       "name": "meta",
       "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/meta-1.16.0",
       "packageUri": "lib/",
@@ -464,8 +608,20 @@
       "languageVersion": "3.2"
     },
     {
+      "name": "mockito",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/mockito-5.4.6",
+      "packageUri": "lib/",
+      "languageVersion": "3.7"
+    },
+    {
       "name": "nested",
       "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/nested-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "nm",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/nm-0.5.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -474,6 +630,24 @@
       "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/octo_image-2.1.0",
       "packageUri": "lib/",
       "languageVersion": "3.0"
+    },
+    {
+      "name": "package_config",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/package_config-2.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "package_info_plus",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/package_info_plus-8.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "package_info_plus_platform_interface",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/package_info_plus_platform_interface-3.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
     },
     {
       "name": "page_transition",
@@ -524,8 +698,38 @@
       "languageVersion": "3.2"
     },
     {
-      "name": "percent_indicator",
-      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/percent_indicator-4.2.5",
+      "name": "permission_handler",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/permission_handler-11.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.5"
+    },
+    {
+      "name": "permission_handler_android",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/permission_handler_android-12.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.5"
+    },
+    {
+      "name": "permission_handler_apple",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/permission_handler_apple-9.4.7",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "permission_handler_html",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/permission_handler_html-0.1.3+5",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "permission_handler_platform_interface",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/permission_handler_platform_interface-4.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.5"
+    },
+    {
+      "name": "permission_handler_windows",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/permission_handler_windows-0.2.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -548,22 +752,58 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "pool",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/pool-1.5.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "posix",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/posix-6.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "provider",
       "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/provider-6.1.5",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
-      "name": "rfc_6901",
-      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/rfc_6901-0.2.0",
+      "name": "pub_semver",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/pub_semver-2.2.0",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "pubspec_parse",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/pubspec_parse-1.5.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.6"
+    },
+    {
+      "name": "riverpod",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/riverpod-2.6.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
     },
     {
       "name": "rxdart",
-      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/rxdart-0.27.7",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/rxdart-0.28.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
+    },
+    {
+      "name": "sentry",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/sentry-7.20.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "sentry_flutter",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/sentry_flutter-7.20.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
     },
     {
       "name": "shared_preferences",
@@ -608,6 +848,18 @@
       "languageVersion": "3.3"
     },
     {
+      "name": "shelf",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/shelf-1.4.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "shelf_web_socket",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/shelf_web_socket-3.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.5"
+    },
+    {
       "name": "sign_in_with_apple",
       "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/sign_in_with_apple-5.0.0",
       "packageUri": "lib/",
@@ -630,6 +882,12 @@
       "rootUri": "file:///usr/local/Caskroom/flutter/3.32.2/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
       "languageVersion": "3.7"
+    },
+    {
+      "name": "source_gen",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/source_gen-2.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.6"
     },
     {
       "name": "source_span",
@@ -680,6 +938,12 @@
       "languageVersion": "3.4"
     },
     {
+      "name": "state_notifier",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/state_notifier-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "stream_channel",
       "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/stream_channel-2.1.4",
       "packageUri": "lib/",
@@ -720,6 +984,12 @@
       "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/timeago-3.7.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
+    },
+    {
+      "name": "timing",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/timing-1.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
     },
     {
       "name": "typed_data",
@@ -794,10 +1064,34 @@
       "languageVersion": "3.3"
     },
     {
+      "name": "watcher",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/watcher-1.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
+    },
+    {
       "name": "web",
       "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/web-1.1.1",
       "packageUri": "lib/",
       "languageVersion": "3.4"
+    },
+    {
+      "name": "web_socket",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/web_socket-1.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "web_socket_channel",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/web_socket_channel-3.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "win32",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/win32-5.14.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.8"
     },
     {
       "name": "xdg_directories",
@@ -806,10 +1100,22 @@
       "languageVersion": "3.3"
     },
     {
+      "name": "xml",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/xml-6.5.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "yaml",
+      "rootUri": "file:///Users/josuani/.pub-cache/hosted/pub.dev/yaml-3.1.3",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
       "name": "reflection",
       "rootUri": "../",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.2"
     }
   ],
   "generator": "pub",

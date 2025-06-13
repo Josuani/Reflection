@@ -280,11 +280,11 @@ extension StringDocRef on String {
   DocumentReference get ref => FirebaseFirestore.instance.doc(this);
 }
 
-void setAppLanguage(BuildContext context, String language) =>
-    MyApp.of(context).setLocale(language);
+// Comentado: void setAppLanguage(BuildContext context, String language) =>
+// Comentado: MyApp.of(context).setLocale(Locale(language));
 
-void setDarkModeSetting(BuildContext context, ThemeMode themeMode) =>
-    MyApp.of(context).setThemeMode(themeMode);
+// Comentado: void setDarkModeSetting(BuildContext context, ThemeMode themeMode) =>
+// Comentado: MyApp.of(context).setThemeMode(themeMode);
 
 void showSnackbar(
   BuildContext context,
@@ -461,7 +461,7 @@ extension ListUniqueExt<T> on Iterable<T> {
   }
 }
 
-String getCurrentRoute(BuildContext context) =>
-    context.mounted ? MyApp.of(context).getRoute() : '';
-List<String> getCurrentRouteStack(BuildContext context) =>
-    context.mounted ? MyApp.of(context).getRouteStack() : [];
+// Comentado: String getCurrentRoute(BuildContext context) =>
+// Comentado: context.mounted ? MyApp.of(context).getRoute() : '';
+// Comentado: List<String> getCurrentRouteStack(BuildContext context) =>
+// Comentado: context.mounted ? MyApp.of(context).getRouteStack() : [];

@@ -3,35 +3,99 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'auth/firebase_auth/firebase_user_provider.dart';
-import 'auth/firebase_auth/auth_util.dart';
-import 'backend/firebase/firebase_config.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
-import 'flutter_flow/flutter_flow_util.dart';
-import 'flutter_flow/internationalization.dart';
-import 'flutter_flow/nav/nav.dart';
-import 'index.dart';
-import 'package:reflection/main_app_shell/main_app_shell_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:provider/provider.dart';
+import 'package:reflection/backend/services/user_profile_service.dart';
+import 'package:reflection/backend/services/user_progress_service.dart';
+import 'package:reflection/backend/services/auth_service.dart';
+import 'package:reflection/backend/services/sync_service.dart';
+import 'package:reflection/backend/services/storage_service.dart';
+import 'package:reflection/backend/services/error_monitoring_service.dart';
+import 'package:reflection/backend/services/local_progress_service.dart';
+import 'package:reflection/backend/config/sentry_config.dart';
+import 'package:reflection/theme/app_theme.dart';
+import 'package:reflection/constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:reflection/constants/l10n.dart';
+import 'package:reflection/providers/auth_provider.dart';
+import 'package:reflection/providers/user_profile_provider.dart';
+import 'package:reflection/routes.dart';
+import 'firebase_options.dart';
+
+Future<void> initializeFirebase() async {
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (e, stackTrace) {
+    print('Failed to initialize Firebase: $e\n$stackTrace');
+    rethrow;
+  }
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  GoRouter.optionURLReflectsImperativeAPIs = true;
   usePathUrlStrategy();
 
-  await initFirebase();
-
-  await FlutterFlowTheme.initialize();
-
-  print('Iniciando MyApp...');
-  runApp(MyApp());
+  try {
+    await initializeFirebase();
+    
+    runApp(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (context) => AuthProvider(
+              AuthService(FirebaseAuth.instance),
+              UserProfileService(
+                auth: FirebaseAuth.instance,
+                firestore: FirebaseFirestore.instance,
+                storage: FirebaseStorage.instance,
+                progressService: UserProgressService(
+                  firestore: FirebaseFirestore.instance,
+                  prefs: await SharedPreferences.getInstance(),
+                ),
+              ),
+            ),
+          ),
+        ],
+        child: const MyApp(),
+      ),
+    );
+  } catch (e, stackTrace) {
+    print('Error initializing app: $e\n$stackTrace');
+    runApp(
+      MaterialApp(
+        home: Scaffold(
+          body: Center(
+            child: Text('Error initializing app: $e'),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  State<MyApp> createState() => _MyAppState();
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
 
-  static _MyAppState of(BuildContext context) =>
-      context.findAncestorStateOfType<_MyAppState>()!;
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp.router(
+      title: 'Reflection',
+      localizationsDelegates: L10n.localizationsDelegates,
+      supportedLocales: L10n.supportedLocales,
+      theme: AppTheme.of(context),
+      routerConfig: createRouter(),
+      builder: (context, child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+          child: child!,
+        );
+      },
+    );
+  }
 }
 
 class MyAppScrollBehavior extends MaterialScrollBehavior {
@@ -42,90 +106,35 @@ class MyAppScrollBehavior extends MaterialScrollBehavior {
       };
 }
 
-class _MyAppState extends State<MyApp> {
-  Locale? _locale;
-  ThemeMode _themeMode = FlutterFlowTheme.themeMode;
-  late AppStateNotifier _appStateNotifier;
-  late GoRouter _router;
-
-  String getRoute([RouteMatch? routeMatch]) {
-    final RouteMatch lastMatch =
-        routeMatch ?? _router.routerDelegate.currentConfiguration.last;
-    final RouteMatchList matchList = lastMatch is ImperativeRouteMatch
-        ? lastMatch.matches
-        : _router.routerDelegate.currentConfiguration;
-    return matchList.uri.toString();
-  }
-
-  List<String> getRouteStack() =>
-      _router.routerDelegate.currentConfiguration.matches
-          .map((e) => getRoute(e is RouteMatch ? e : null))
-          .toList();
-
-  late Stream<BaseAuthUser> userStream;
-  final authUserSub = authenticatedUserStream.listen((_) {});
-
-  @override
-  void initState() {
-    super.initState();
-    print('Entrando a initState de MyApp');
-    _appStateNotifier = AppStateNotifier.instance;
-    _router = createRouter(_appStateNotifier);
-    userStream = reflectionFirebaseUserStream()
-      ..listen((user) {
-        _appStateNotifier.update(user);
-      });
-    jwtTokenStream.listen((_) {});
-    Future.delayed(
-      Duration(milliseconds: 1000),
-      () => _appStateNotifier.stopShowingSplashImage(),
-    );
-  }
-
-  @override
-  void dispose() {
-    authUserSub.cancel();
-    super.dispose();
-  }
-
-  void setLocale(String language) {
-    safeSetState(() => _locale = createLocale(language));
-  }
-
-  void setThemeMode(ThemeMode mode) => safeSetState(() {
-        _themeMode = mode;
-        FlutterFlowTheme.saveThemeMode(mode);
-      });
+class MainScreen extends StatelessWidget {
+  const MainScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    print('Entrando a build de MyApp');
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      title: 'Reflection',
-      scrollBehavior: MyAppScrollBehavior(),
-      localizationsDelegates: [
-        FFLocalizationsDelegate(),
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        FallbackMaterialLocalizationDelegate(),
-        FallbackCupertinoLocalizationDelegate(),
-      ],
-      locale: _locale,
-      supportedLocales: const [
-        Locale('es'),
-      ],
-      theme: ThemeData(
-        brightness: Brightness.light,
-        useMaterial3: false,
+    return Scaffold(
+      body: Stack(
+        children: [
+          AppTheme.getBackground(),
+          SafeArea(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'REFLECTION',
+                    style: AppTheme.titleStyle,
+                  ),
+                  const SizedBox(height: 32),
+                  ElevatedButton(
+                    onPressed: () => Navigator.pushNamed(context, '/profile'),
+                    child: const Text('START'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        useMaterial3: false,
-      ),
-      themeMode: _themeMode,
-      routerConfig: _router,
     );
   }
 }

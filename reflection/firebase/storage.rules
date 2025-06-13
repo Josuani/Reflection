@@ -1,12 +1,34 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    match /{allPaths=**} {
-      allow read, write: if false;
+    // Función auxiliar para verificar si el usuario está autenticado
+    function isAuthenticated() {
+      return request.auth != null;
     }
-    match /users/{userId}/{allPaths=**} {
-      allow read: if request.auth.uid == userId;
-      allow write: if request.auth.uid == userId;
+    
+    // Función auxiliar para verificar si el usuario es el propietario del archivo
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Reglas para avatares de usuario
+    match /avatars/{userId}/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner(userId) 
+        && request.resource.size < 5 * 1024 * 1024 // 5MB max
+        && request.resource.contentType.matches('image/.*');
+    }
+
+    // Reglas para imágenes de misiones
+    match /missions/{missionId}/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if false; // Solo escritura desde el backend
+    }
+
+    // Reglas para imágenes de logros
+    match /achievements/{achievementId}/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if false; // Solo escritura desde el backend
     }
   }
 }

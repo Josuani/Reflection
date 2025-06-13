@@ -99,7 +99,7 @@ class RecentActivities extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  activity['title'] as String,
+                                  activity['title'] as String? ?? 'Sin título',
                                   style: FlutterFlowTheme.of(context).bodyMedium.override(
                                         font: GoogleFonts.pressStart2p(
                                           fontWeight: FontWeight.w600,
@@ -113,7 +113,7 @@ class RecentActivities extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  activity['description'] as String,
+                                  activity['description'] as String? ?? 'Sin descripción',
                                   style: FlutterFlowTheme.of(context).bodySmall.override(
                                         font: GoogleFonts.pressStart2p(
                                           fontWeight: FontWeight.w500,
@@ -129,7 +129,7 @@ class RecentActivities extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            activity['time'] as String,
+                            activity['time'] as String? ?? 'Sin tiempo',
                             style: FlutterFlowTheme.of(context).bodySmall.override(
                                   font: GoogleFonts.pressStart2p(
                                     fontWeight: FontWeight.w500,

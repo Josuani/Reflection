@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
+import '../providers/user_profile_provider.dart';
 
 class SlackSidebar extends StatefulWidget {
   final int selectedIndex;
@@ -24,8 +25,7 @@ class _SlackSidebarState extends State<SlackSidebar> {
   Widget build(BuildContext context) {
     final theme = FlutterFlowTheme.of(context);
     final width = _expanded ? 220.0 : 72.0;
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
+    return Container(
       width: width,
       decoration: BoxDecoration(
         color: theme.secondaryBackground,
@@ -42,51 +42,28 @@ class _SlackSidebarState extends State<SlackSidebar> {
       ),
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 12),
-            child: _expanded
-                ? Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Icon(Icons.bubble_chart_rounded, color: theme.primary, size: 32),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: Text(
-                            'Reflection',
-                            style: theme.titleLarge.copyWith(
-                              color: theme.primary,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              letterSpacing: 1.5,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
-                        ),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.chevron_left, color: theme.primary),
-                        tooltip: 'Contraer',
-                        onPressed: () => setState(() => _expanded = false),
-                      ),
+          Consumer<UserProfileProvider>(
+            builder: (context, userProfileProvider, _) {
+              final user = userProfileProvider.userProfile;
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    if (user != null) ...[
+                      PixelAvatar(avatarUrl: user.avatarUrl, size: 64),
+                      const SizedBox(height: 8),
+                      Text(user.displayName ?? 'Sin nombre', style: theme.titleLarge.copyWith(fontWeight: FontWeight.bold, fontSize: 20, letterSpacing: 1.5)),
+                      const SizedBox(height: 4),
+                      Text('Nivel ${user.level}', style: theme.labelSmall.copyWith(color: theme.secondaryText, fontSize: 13)),
+                    ] else ...[
+                      const CircularProgressIndicator(),
                     ],
-                  )
-                : Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.bubble_chart_rounded, color: theme.primary, size: 32),
-                      IconButton(
-                        icon: Icon(Icons.chevron_right, color: theme.primary),
-                        tooltip: 'Expandir',
-                        onPressed: () => setState(() => _expanded = true),
-                      ),
-                    ],
-                  ),
+                  ],
+                ),
+              );
+            },
           ),
-          const SizedBox(height: 12),
-          // Ítems de navegación
+          const Divider(color: AppTheme.accentColor),
           Expanded(
             child: ListView.separated(
               itemCount: widget.destinations.length,
@@ -154,60 +131,6 @@ class _SlackSidebarState extends State<SlackSidebar> {
                 );
               },
             ),
-          ),
-          // Perfil abajo
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 12),
-            child: _expanded
-                ? Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      CircleAvatar(
-                        radius: 20,
-                        backgroundImage: AssetImage('assets/images/me.jpg'),
-                      ),
-                      SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'John Doe',
-                              style: theme.labelLarge.copyWith(color: theme.primary, fontSize: 15),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                            Text(
-                              'Nivel 7',
-                              style: theme.labelSmall.copyWith(color: theme.secondaryText, fontSize: 13),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                          ],
-                        ),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.logout, color: theme.secondaryText, size: 20),
-                        tooltip: 'Cerrar sesión',
-                        onPressed: () {},
-                      ),
-                    ],
-                  )
-                : Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      CircleAvatar(
-                        radius: 20,
-                        backgroundImage: AssetImage('assets/images/me.jpg'),
-                      ),
-                      const SizedBox(height: 8),
-                      IconButton(
-                        icon: Icon(Icons.logout, color: theme.secondaryText, size: 20),
-                        tooltip: 'Cerrar sesión',
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
           ),
         ],
       ),

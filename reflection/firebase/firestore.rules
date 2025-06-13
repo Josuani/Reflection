@@ -1,18 +1,39 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /users/{document} {
-      allow create: if request.auth.uid == document;
-      allow read: if request.auth.uid == document;
-      allow write: if request.auth.uid == document;
-      allow delete: if request.auth.uid == document;
+    // Función auxiliar para verificar si el usuario está autenticado
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Función auxiliar para verificar si el usuario es el propietario del documento
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
     }
 
-    match /tasks/{document} {
-      allow create: if true;
-      allow read: if true;
-      allow write: if false;
-      allow delete: if false;
+    // Reglas para la colección de usuarios
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+      allow update, delete: if isOwner(userId);
+    }
+
+    // Reglas para la colección de progreso del usuario
+    match /userProgress/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner(userId);
+    }
+
+    // Reglas para la colección de misiones
+    match /missions/{missionId} {
+      allow read: if isAuthenticated();
+      allow write: if false; // Solo escritura desde el backend
+    }
+
+    // Reglas para la colección de logros
+    match /achievements/{achievementId} {
+      allow read: if isAuthenticated();
+      allow write: if false; // Solo escritura desde el backend
     }
   }
 }

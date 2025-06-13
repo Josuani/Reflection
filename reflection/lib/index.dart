@@ -12,4 +12,3 @@ export '/pages/pag_carga/pag_carga_widget.dart' show PagCargaWidget;
 export '/pages/login_reflection/login_reflection_widget.dart'
     show LoginReflectionWidget;
 export '/pages/misiones2/misiones2_widget.dart' show Misiones2Widget;
-export '/test/perfiltest/perfiltest_widget.dart' show PerfiltestWidget;

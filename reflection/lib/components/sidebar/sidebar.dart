@@ -111,9 +111,6 @@ class _SidebarState extends State<Sidebar> with SingleTickerProviderStateMixin {
                 child: model.isExpanded && _widthAnimation.value > 150
                     ? SidebarProfile(
                         isExpanded: true,
-                        profileImagePath: 'assets/images/me.jpg',
-                        userName: 'My Account',
-                        userEmail: 'user@example.com',
                       )
                     : Center(
                         child: Container(
