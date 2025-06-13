@@ -9,6 +9,9 @@ import 'widgets/quick_actions.dart';
 import '/backend/firebase/mission_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '/pages/misiones2/misiones2_widget.dart';
+import '/services/database_service.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:reflection/pages/profile/profile_page_widget.dart';
 export 'home_page_model.dart';
 
 class HomePageWidget extends StatefulWidget {
@@ -24,6 +27,23 @@ class HomePageWidget extends StatefulWidget {
 class _HomePageWidgetState extends State<HomePageWidget> {
   late HomePageModel _model;
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  late final StreamSubscription<ConnectivityResult> _connSub;
+
+  /// Método que recarga datos de usuario y misiones
+  void refreshData() {
+    DatabaseService.instance
+      .readUsuario(DatabaseService.instance.currentUserId)
+      .then((doc) {
+        if (mounted) {
+          setState(() {
+            // Aquí actualizamos el estado con los nuevos datos
+            // Por ejemplo:
+            // currentUser = Usuario.fromMap(doc.data()!);
+          });
+        }
+    });
+    DatabaseService.instance.refreshMissionsCache();
+  }
 
   // Mock data for activities
   final List<Map<String, dynamic>> _activities = [
@@ -81,13 +101,27 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   @override
   void initState() {
     super.initState();
-    print('Entrando a initState de HomePageWidget');
     _model = createModel(context, () => HomePageModel());
+
+    // Sincronizar cambios pendientes y refrescar caché
+    DatabaseService.instance
+      .syncPendingChanges()
+      .then((_) => DatabaseService.instance.refreshMissionsCache());
+
+    // Listener de conectividad para re-sincronizar al reconectar
+    _connSub = Connectivity().onConnectivityChanged.listen((status) {
+      if (status != ConnectivityResult.none) {
+        DatabaseService.instance
+          .syncPendingChanges()
+          .then((_) => DatabaseService.instance.refreshMissionsCache());
+      }
+    });
   }
 
   @override
   void dispose() {
     _model.dispose();
+    _connSub.cancel();
     super.dispose();
   }
 
@@ -373,122 +407,87 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    print('Entrando a build de HomePageWidget');
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: Scaffold(
+    return Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         body: SafeArea(
           top: true,
           child: SingleChildScrollView(
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+            mainAxisSize: MainAxisSize.max,
               children: [
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 16.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      HomeHeader(
-                        userName: 'John Doe',
-                        avatarUrl: 'assets/images/me.jpg',
-                        level: 7,
-                      ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
-                        child: DailyProgress(
-                          completedTasks: 5,
-                          totalTasks: 8,
-                          streakDays: 7,
-                          dailyGoal: 6,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
-                        child: QuickActions(
+              HomeHeader(),
+              DailyProgress(),
+              RecentActivities(activities: _activities),
+              QuickActions(
                           actions: _quickActions,
                           onActionPressed: _handleActionPressed,
                         ),
-                      ),
+              // Botón de prueba de Firestore
                       Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
-                        child: StreamBuilder<List<Map<String, dynamic>>>(
-                          stream: MissionService().getMissionsByStatus('completado'),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasError) {
-                              return Center(child: Text('Error: \\${snapshot.error}', style: TextStyle(color: Colors.red)));
-                            }
-                            if (snapshot.connectionState == ConnectionState.waiting) {
-                              return Center(child: CircularProgressIndicator());
-                            }
-                            if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                              return Center(
-                                child: Text(
-                                  'No hay misiones completadas recientes.',
-                                  style: TextStyle(color: Colors.white, fontSize: 14),
-                                ),
-                              );
-                            }
-                            final completedMissions = snapshot.data!;
-                            completedMissions.sort((a, b) {
-                              final aDate = parseDate(a['updatedAt'] ?? a['fechaCreacion']);
-                              final bDate = parseDate(b['updatedAt'] ?? b['fechaCreacion']);
-                              if (aDate == null && bDate == null) return 0;
-                              if (aDate == null) return 1;
-                              if (bDate == null) return -1;
-                              return bDate.compareTo(aDate);
-                            });
-                            final recent = completedMissions.take(5).map((m) {
-                              final dateStr = m['updatedAt'] ?? m['fechaCreacion'];
-                              final date = parseDate(dateStr);
-                              return {
-                                'title': m['title'] ?? 'Misión completada',
-                                'description': m['description'] ?? '',
-                                'time': date != null ? timeAgoFromDate(date) : 'fecha inválida',
-                                'icon': Icons.check_circle,
-                              };
-                            }).toList();
-                            return RecentActivities(activities: recent);
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
-                        child: StreamBuilder<List<Map<String, dynamic>>>(
-                          stream: MissionService().getMissions(),
-                          builder: (context, snapshot) {
-                            print('Todas las misiones (sin filtro): ${snapshot.data}');
-                            if (snapshot.connectionState == ConnectionState.waiting) {
-                              return Center(child: CircularProgressIndicator());
-                            }
-                            if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                              return Center(
-                                child: Text(
-                                  'No hay misiones en la base de datos.',
-                                  style: TextStyle(color: Colors.white, fontSize: 14),
-                                ),
-                              );
-                            }
-                            final allMissions = snapshot.data!;
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('DEPURACIÓN: Todas las misiones:', style: TextStyle(color: Colors.amber, fontWeight: FontWeight.bold)),
-                                ...allMissions.map((m) => Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 2),
-                                  child: Text('${m['title']} | status: ${m['status']}', style: TextStyle(color: Colors.white)),
-                                )),
-                              ],
-                            );
-                          },
-                        ),
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    ElevatedButton(
+                      onPressed: () async {
+                        // 1) Crear un usuario de prueba en Firestore
+                        final docRef = await DatabaseService().createUsuario({
+                          'nombre': 'TestUser',
+                          'nivel': 1,
+                          'puntos': 0,
+                          'avatar': 'https://mi.avatar/imagen.png',
+                        });
+                        // 2) Leerlo de vuelta
+                        final docSnapshot = await DatabaseService().readUsuario(docRef.id);
+                        // 3) Mostrarlo en consola
+                        debugPrint('Usuario leído: ${docSnapshot.data()}');
+                      },
+                      child: Text('Probar Firestore'),
+                    ),
+                    SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () async {
+                        // 1) Crear misión de prueba en Hive
+                        final prueba = Mision(
+                          id: 'test_hive',
+                          titulo: 'Misión Offline',
+                          descripcion: 'Descripción de prueba',
+                          puntos: 5,
+                        );
+                        await DatabaseService().cacheMision(prueba);
+
+                        // 2) Leerla de vuelta
+                        final cached = DatabaseService().getCachedMision('test_hive');
+
+                        // 3) Mostrar resultado en consola
+                        debugPrint('Hive: ${cached?.titulo} – ${cached?.puntos} puntos');
+                      },
+                      child: Text('Probar Hive'),
                       ),
                     ],
                   ),
                 ),
+              ),
+              // Botón de perfil
+              IconButton(
+                icon: Icon(
+                  Icons.person,
+                  color: FlutterFlowTheme.of(context).primary,
+                  size: 24,
+                ),
+                onPressed: () async {
+                  final updated = await Navigator.push<bool>(
+                    context,
+                    MaterialPageRoute(builder: (_) => ProfilePageWidget()),
+                  );
+                  if (updated == true) {
+                    // Solo si el usuario guardó cambios, refrescamos:
+                    await DatabaseService.instance.readUsuario(DatabaseService.instance.currentUserId);
+                    setState(() {});
+                  }
+                },
+              ),
               ],
-            ),
           ),
         ),
       ),

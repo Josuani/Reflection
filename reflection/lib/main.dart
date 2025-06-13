@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'auth/firebase_auth/firebase_user_provider.dart';
 import 'auth/firebase_auth/auth_util.dart';
 import 'backend/firebase/firebase_config.dart';
@@ -12,9 +13,26 @@ import 'flutter_flow/internationalization.dart';
 import 'flutter_flow/nav/nav.dart';
 import 'index.dart';
 import 'package:reflection/main_app_shell/main_app_shell_widget.dart';
+import 'package:reflection/services/database_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Inicialización de Hive
+  await Hive.initFlutter();
+
+  // Registro de adapters generados
+  Hive.registerAdapter(MisionAdapter());
+  Hive.registerAdapter(DraftChangeAdapter());
+  Hive.registerAdapter(SettingAdapter());
+  Hive.registerAdapter(UIStateAdapter());
+
+  // Abrir boxes necesarios antes de correr la app
+  await Hive.openBox<Mision>('cache_misiones');
+  await Hive.openBox<DraftChange>('borradores_cambios');
+  await Hive.openBox<Setting>('preferencias');
+  await Hive.openBox<UIState>('estado_ui');
+
   GoRouter.optionURLReflectsImperativeAPIs = true;
   usePathUrlStrategy();
 
