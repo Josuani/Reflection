@@ -73,28 +73,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   // Mock data for quick actions
   final List<Map<String, dynamic>> _quickActions = [
     {
-      'id': 'new_reflection',
-      'title': 'New Reflection',
-      'description': 'Start your daily reflection',
+      'id': 'new_task',
+      'title': 'Nueva tarea',
+      'description': 'Crea una nueva misión',
       'icon': Icons.edit_note,
-    },
-    {
-      'id': 'view_missions',
-      'title': 'View Missions',
-      'description': 'Check your active missions',
-      'icon': Icons.flag,
-    },
-    {
-      'id': 'set_goal',
-      'title': 'Set Goal',
-      'description': 'Create a new goal',
-      'icon': Icons.track_changes,
-    },
-    {
-      'id': 'view_stats',
-      'title': 'View Stats',
-      'description': 'Check your progress',
-      'icon': Icons.bar_chart,
     },
   ];
 
@@ -127,20 +109,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
   void _handleActionPressed(String actionId) {
     switch (actionId) {
-      case 'new_reflection':
-        print('New reflection pressed');
-        break;
-      case 'view_missions':
-        context.pushNamed('misiones2');
-        break;
-      case 'set_goal':
-        print('Set goal pressed');
-        break;
-      case 'view_stats':
-        print('View stats pressed');
-        break;
       case 'new_task':
-        // Restaurar: Navegar a la página de misiones y abrir el formulario ahí (o dejar sin acción temporalmente)
+        context.pushNamed('misiones2');
         break;
     }
   }
@@ -417,12 +387,19 @@ class _HomePageWidgetState extends State<HomePageWidget> {
             mainAxisSize: MainAxisSize.max,
               children: [
               HomeHeader(),
-              DailyProgress(),
-              RecentActivities(activities: _activities),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+                child: Text(
+                  'Reflection es una plataforma para el crecimiento personal y la gestión de hábitos. Aquí podrás registrar tus reflexiones diarias, establecer metas, monitorear tu progreso y desbloquear logros mientras mejoras diferentes áreas de tu vida.',
+                  style: FlutterFlowTheme.of(context).bodyLarge,
+                  textAlign: TextAlign.center,
+                ),
+              ),
               QuickActions(
-                          actions: _quickActions,
-                          onActionPressed: _handleActionPressed,
-                        ),
+                actions: _quickActions,
+                onActionPressed: _handleActionPressed,
+              ),
+              RecentActivities(activities: _activities),
               // Botón de prueba de Firestore
                       Padding(
                 padding: EdgeInsets.all(16),

@@ -38,33 +38,9 @@ class ProfileHeader extends StatelessWidget {
             Row(
               mainAxisSize: MainAxisSize.max,
               children: [
-                Container(
-                  width: 100.0,
-                  height: 100.0,
-                  decoration: BoxDecoration(
-                    color: FlutterFlowTheme.of(context).primaryBackground,
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: FlutterFlowTheme.of(context).primary,
-                      width: 2.0,
-                    ),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(2.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(50.0),
-                      child: Image.asset(
-                        profileImagePath,
-                        width: 100.0,
-                        height: 100.0,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
                 Expanded(
                   child: Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 0.0, 0.0),
+                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,

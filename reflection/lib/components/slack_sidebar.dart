@@ -162,45 +162,21 @@ class _SlackSidebarState extends State<SlackSidebar> {
                 ? Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      CircleAvatar(
-                        radius: 20,
-                        backgroundImage: AssetImage('assets/images/me.jpg'),
-                      ),
-                      SizedBox(width: 12),
                       Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'John Doe',
-                              style: theme.labelLarge.copyWith(color: theme.primary, fontSize: 15),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                            Text(
-                              'Nivel 7',
-                              style: theme.labelSmall.copyWith(color: theme.secondaryText, fontSize: 13),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                          ],
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: IconButton(
+                            icon: Icon(Icons.logout, color: theme.secondaryText, size: 20),
+                            tooltip: 'Cerrar sesión',
+                            onPressed: () {},
+                          ),
                         ),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.logout, color: theme.secondaryText, size: 20),
-                        tooltip: 'Cerrar sesión',
-                        onPressed: () {},
                       ),
                     ],
                   )
                 : Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      CircleAvatar(
-                        radius: 20,
-                        backgroundImage: AssetImage('assets/images/me.jpg'),
-                      ),
-                      const SizedBox(height: 8),
                       IconButton(
                         icon: Icon(Icons.logout, color: theme.secondaryText, size: 20),
                         tooltip: 'Cerrar sesión',

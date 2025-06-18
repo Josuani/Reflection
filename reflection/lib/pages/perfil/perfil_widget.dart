@@ -114,11 +114,17 @@ class _PerfilWidgetState extends State<PerfilWidget> {
     });
   }
 
-  void _handleLogout() {
-    // Aquí deberías limpiar el estado de usuario y navegar al login
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Sesión cerrada (simulado)')),
-    );
+  void _handleLogout() async {
+    try {
+      await authManager.signOut();
+      if (mounted) {
+        context.go('/LoginReflection');
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al cerrar sesión: ' + e.toString())),
+      );
+    }
   }
 
   Future<void> _pickAvatar() async {
@@ -290,24 +296,7 @@ class _PerfilWidgetState extends State<PerfilWidget> {
                         ),
                       ),
                       const SizedBox(height: 32),
-                      // Configuración
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text('Configuración', style: theme.titleMedium.copyWith(fontFamily: 'VT323', color: theme.primary)),
-                      ),
-                      const SizedBox(height: 12),
-                      SwitchListTile(
-                        title: Text('Notificaciones', style: theme.bodyMedium),
-                        value: notificationsEnabled,
-                        onChanged: (v) => setState(() => notificationsEnabled = v),
-                        activeColor: theme.primary,
-                      ),
-                      SwitchListTile(
-                        title: Text('Modo oscuro', style: theme.bodyMedium),
-                        value: darkModeEnabled,
-                        onChanged: (v) => setState(() => darkModeEnabled = v),
-                        activeColor: theme.primary,
-                      ),
+                      // Configuración eliminada
                       const SizedBox(height: 24),
                       ElevatedButton.icon(
                         icon: const Icon(Icons.logout),

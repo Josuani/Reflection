@@ -42,90 +42,41 @@ class HomeHeader extends StatelessWidget {
       ),
       child: Padding(
         padding: EdgeInsets.all(24.0),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CircleAvatar(
-              radius: 24,
-              backgroundImage: AssetImage(avatarUrl),
-              backgroundColor: FlutterFlowTheme.of(context).primary,
+            Text(
+              greeting,
+              style: FlutterFlowTheme.of(context).headlineMedium.override(
+                    font: GoogleFonts.pressStart2p(
+                      fontWeight: FontWeight.bold,
+                      fontStyle: FlutterFlowTheme.of(context).headlineMedium.fontStyle,
+                    ),
+                    color: FlutterFlowTheme.of(context).primaryText,
+                    fontSize: 22.0,
+                    letterSpacing: 0.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    greeting,
-                    style: FlutterFlowTheme.of(context).headlineMedium.override(
-                          font: GoogleFonts.pressStart2p(
-                            fontWeight: FontWeight.bold,
-                            fontStyle: FlutterFlowTheme.of(context).headlineMedium.fontStyle,
-                          ),
-                          color: FlutterFlowTheme.of(context).primaryText,
-                          fontSize: 22.0,
-                          letterSpacing: 0.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                  Text(
-                    userName,
-                    style: FlutterFlowTheme.of(context).titleLarge.override(
-                          font: GoogleFonts.pressStart2p(
-                            fontWeight: FontWeight.bold,
-                            fontStyle: FlutterFlowTheme.of(context).titleLarge.fontStyle,
-                          ),
-                          color: FlutterFlowTheme.of(context).primary,
-                          fontSize: 18.0,
-                          letterSpacing: 0.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                  Row(
-                    children: [
-                      Icon(Icons.star, color: FlutterFlowTheme.of(context).warning, size: 18),
-                      const SizedBox(width: 4),
-                      Text(
-                        'Nivel $level',
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              font: GoogleFonts.pressStart2p(
-                                fontWeight: FontWeight.w600,
-                                fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                              ),
-                              color: FlutterFlowTheme.of(context).secondaryText,
-                              fontSize: 14.0,
-                              letterSpacing: 0.0,
-                              fontWeight: FontWeight.w600,
-                            ),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 0.0),
+              child: Text(
+                formattedDate,
+                style: FlutterFlowTheme.of(context).bodyMedium.override(
+                      font: GoogleFonts.pressStart2p(
+                        fontWeight: FontWeight.w500,
+                        fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                       ),
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 0.0),
-                    child: Text(
-                      formattedDate,
-                      style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            font: GoogleFonts.pressStart2p(
-                              fontWeight: FontWeight.w500,
-                              fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                            ),
-                            color: FlutterFlowTheme.of(context).secondaryText,
-                            fontSize: 13.0,
-                            letterSpacing: 0.0,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      ),
-                  ),
-                ],
-              ),
+                      color: FlutterFlowTheme.of(context).secondaryText,
+                      fontSize: 13.0,
+                      letterSpacing: 0.0,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
             ),
           ],
         ),
