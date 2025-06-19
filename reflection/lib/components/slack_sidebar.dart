@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '/services/database_service.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '/auth/firebase_auth/auth_util.dart';
+import 'package:go_router/go_router.dart';
 
 class SlackSidebar extends StatefulWidget {
   final List<dynamic> destinations;
@@ -101,112 +105,169 @@ class _SlackSidebarState extends State<SlackSidebar> {
       ),
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 12),
-            child: _expanded
-                ? Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Icon(Icons.bubble_chart_rounded, color: theme.primary, size: 32),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: Text(
-                            'Reflection',
-                            style: theme.titleLarge.copyWith(
-                              color: theme.primary,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              letterSpacing: 1.5,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
+          // Header con toggle button
+          Container(
+            height: 68,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            decoration: BoxDecoration(
+              color: theme.secondaryBackground,
+              border: Border(
+                bottom: BorderSide(
+                  color: theme.accent2.withOpacity(0.1),
+                  width: 2,
+                ),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: _expanded ? MainAxisAlignment.spaceBetween : MainAxisAlignment.center,
+              children: [
+                if (_expanded) ...[
+                  Expanded(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: Icon(
+                            Icons.auto_awesome,
+                            color: theme.primary.withOpacity(0.7),
+                            size: 16,
                           ),
                         ),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.chevron_left, color: theme.primary),
-                        tooltip: 'Contraer',
-                        onPressed: () => setState(() => _expanded = false),
-                      ),
-                    ],
-                  )
-                : Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.bubble_chart_rounded, color: theme.primary, size: 32),
-                      IconButton(
-                        icon: Icon(Icons.chevron_right, color: theme.primary),
-                        tooltip: 'Expandir',
-                        onPressed: () => setState(() => _expanded = true),
-                      ),
-                    ],
-                  ),
-          ),
-          const SizedBox(height: 12),
-          // Ítems de navegación
-          Expanded(
-            child: ListView.separated(
-              itemCount: widget.destinations.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 4),
-              itemBuilder: (context, i) {
-                final item = widget.destinations[i];
-                final selected = widget.selectedIndex == i;
-                return Tooltip(
-                  message: item.tooltip ?? item.label,
-                  textStyle: theme.bodySmall.copyWith(fontFamily: 'VT323', fontSize: 16, color: theme.primaryText),
-                  waitDuration: const Duration(milliseconds: 400),
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(12),
-                    onTap: () => widget.onItemSelected(i),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 250),
-                      curve: Curves.easeOut,
-                      margin: const EdgeInsets.symmetric(horizontal: 8),
-                      padding: EdgeInsets.symmetric(
-                        vertical: 12,
-                        horizontal: _expanded ? 16 : 0,
-                      ),
-                      decoration: BoxDecoration(
-                        color: selected ? theme.primary.withOpacity(0.18) : Colors.transparent,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: selected ? theme.primary : Colors.transparent,
-                          width: 2,
+                        Expanded(
+                          child: Text(
+                            'Reflection',
+                            style: GoogleFonts.pressStart2p(
+                              textStyle: theme.headlineSmall.copyWith(
+                                color: theme.primary,
+                                fontSize: 13.5,
+                                height: 1,
+                                letterSpacing: 0,
+                              ),
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
-                        boxShadow: selected
-                            ? [
-                                BoxShadow(
-                                  color: theme.primary.withOpacity(0.18),
-                                  blurRadius: 6,
-                                  offset: Offset(0, 2),
-                                ),
-                              ]
-                            : [],
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Container(
+                    width: 34,
+                    height: 34,
+                    decoration: BoxDecoration(
+                      color: theme.primary.withOpacity(0.05),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.chevron_left,
+                        color: theme.primary,
+                        size: 22,
                       ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Icon(item.icon, color: selected ? theme.primary : theme.secondaryText, size: 28),
-                          if (_expanded)
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 16.0),
+                      padding: EdgeInsets.zero,
+                      visualDensity: VisualDensity.compact,
+                      onPressed: () {
+                        setState(() {
+                          _expanded = false;
+                        });
+                      },
+                    ),
+                  ),
+                ] else ...[
+                  Container(
+                    width: 34,
+                    height: 34,
+                    decoration: BoxDecoration(
+                      color: theme.primary.withOpacity(0.05),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.chevron_right,
+                        color: theme.primary,
+                        size: 22,
+                      ),
+                      padding: EdgeInsets.zero,
+                      visualDensity: VisualDensity.compact,
+                      onPressed: () {
+                        setState(() {
+                          _expanded = true;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+
+          const Divider(height: 1),
+
+          // Lista de destinos
+          Expanded(
+            child: ListView.builder(
+              padding: EdgeInsets.symmetric(vertical: 12),
+              itemCount: widget.destinations.length,
+              itemBuilder: (context, index) {
+                final item = widget.destinations[index];
+                final selected = index == widget.selectedIndex;
+                return Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: _expanded ? 8.0 : 1.0,
+                    vertical: 4.0,
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () => widget.onItemSelected(index),
+                      borderRadius: BorderRadius.circular(8),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: _expanded ? 12 : 2,
+                          vertical: 12,
+                        ),
+                        decoration: BoxDecoration(
+                          color: selected ? theme.primary.withOpacity(0.1) : Colors.transparent,
+                          borderRadius: BorderRadius.circular(8),
+                          border: selected ? Border.all(
+                            color: theme.primary.withOpacity(0.2),
+                            width: 1,
+                          ) : null,
+                          boxShadow: selected ? [
+                            BoxShadow(
+                              color: theme.primary.withOpacity(0.05),
+                              blurRadius: 4,
+                              offset: Offset(0, 2),
+                            ),
+                          ] : null,
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: _expanded ? MainAxisAlignment.start : MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              item.icon,
+                              color: selected ? theme.primary : theme.secondaryText,
+                              size: 22,
+                            ),
+                            if (_expanded) ...[
+                              SizedBox(width: 12),
+                              Expanded(
                                 child: Text(
                                   item.label,
                                   style: theme.titleSmall.copyWith(
                                     color: selected ? theme.primary : theme.secondaryText,
                                     fontWeight: selected ? FontWeight.bold : FontWeight.normal,
-                                    fontSize: 16,
-                                    letterSpacing: 1.2,
+                                    fontSize: 14,
                                   ),
                                   overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
                                 ),
                               ),
-                            ),
-                        ],
+                            ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -214,44 +275,99 @@ class _SlackSidebarState extends State<SlackSidebar> {
               },
             ),
           ),
+
+          const Divider(height: 1),
+
           // Perfil abajo
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 12),
+          Container(
+            decoration: BoxDecoration(
+              color: theme.secondaryBackground,
+              border: Border(
+                top: BorderSide(
+                  color: theme.accent2.withOpacity(0.1),
+                  width: 2,
+                ),
+              ),
+            ),
             child: _expanded
-                ? Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              _userData?['nombre'] ?? 'Usuario',
-                              style: theme.labelLarge.copyWith(color: theme.primary, fontSize: 15),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                            Text(
-                              'Nivel ${_userData?['nivel'] ?? 1}',
-                              style: theme.labelSmall.copyWith(color: theme.secondaryText, fontSize: 13),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                          ],
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                _userData?['nombre'] ?? 'Usuario',
+                                style: theme.labelLarge.copyWith(
+                                  color: theme.primary,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Text(
+                                'Nivel ${_userData?['nivel'] ?? 1}',
+                                style: theme.labelSmall.copyWith(
+                                  color: theme.secondaryText,
+                                  fontSize: 12,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Container(
+                          width: 32,
+                          height: 32,
+                          decoration: BoxDecoration(
+                            color: theme.primary.withOpacity(0.05),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: IconButton(
+                            icon: Icon(Icons.logout, color: theme.secondaryText, size: 20),
+                            tooltip: 'Cerrar sesión',
+                            padding: EdgeInsets.zero,
+                            visualDensity: VisualDensity.compact,
+                            onPressed: () async {
+                              await authManager.signOut();
+                              if (mounted) {
+                                context.go('/LoginReflection');
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 2),
+                    child: Center(
+                      child: Container(
+                        width: 32,
+                        height: 32,
+                        decoration: BoxDecoration(
+                          color: theme.primary.withOpacity(0.05),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: IconButton(
+                          icon: Icon(Icons.logout, color: theme.secondaryText, size: 20),
+                          tooltip: 'Cerrar sesión',
+                          padding: EdgeInsets.zero,
+                          visualDensity: VisualDensity.compact,
+                          onPressed: () async {
+                            await authManager.signOut();
+                            if (mounted) {
+                              context.go('/LoginReflection');
+                            }
+                          },
                         ),
                       ),
-                      IconButton(
-                        icon: Icon(Icons.logout, color: theme.secondaryText, size: 20),
-                        tooltip: 'Cerrar sesión',
-                        onPressed: () {},
-                      ),
-                    ],
-                  )
-                : IconButton(
-                    icon: Icon(Icons.logout, color: theme.secondaryText, size: 20),
-                    tooltip: 'Cerrar sesión',
-                    onPressed: () {},
+                    ),
                   ),
           ),
         ],
