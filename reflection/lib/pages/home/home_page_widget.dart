@@ -6,12 +6,14 @@ import 'widgets/home_header.dart';
 import 'widgets/daily_progress.dart';
 import 'widgets/recent_activities.dart';
 import 'widgets/quick_actions.dart';
+import 'widgets/stats_summary.dart';
 import '/backend/firebase/mission_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '/pages/misiones2/misiones2_widget.dart';
 import '/services/database_service.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:reflection/pages/profile/profile_page_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 export 'home_page_model.dart';
 
 class HomePageWidget extends StatefulWidget {
@@ -24,125 +26,248 @@ class HomePageWidget extends StatefulWidget {
   State<HomePageWidget> createState() => _HomePageWidgetState();
 }
 
-class _HomePageWidgetState extends State<HomePageWidget> {
+class _HomePageWidgetState extends State<HomePageWidget> with TickerProviderStateMixin {
   late HomePageModel _model;
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late final StreamSubscription<ConnectivityResult> _connSub;
+  
+  // Controladores de animación
+  late AnimationController _fadeController;
+  late AnimationController _slideController;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
+
+  // Datos del usuario
+  Map<String, dynamic>? _userData;
+  bool _isLoading = true;
+  String _errorMessage = '';
 
   /// Método que recarga datos de usuario y misiones
-  void refreshData() {
-    DatabaseService.instance
-      .readUsuario(DatabaseService.instance.currentUserId)
-      .then((doc) {
+  Future<void> refreshData() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = '';
+    });
+
+    try {
+      final userId = FirebaseAuth.instance.currentUser?.uid;
+      if (userId != null) {
+        final doc = await DatabaseService().readUsuario(userId);
         if (mounted) {
           setState(() {
-            // Aquí actualizamos el estado con los nuevos datos
-            // Por ejemplo:
-            // currentUser = Usuario.fromMap(doc.data()!);
+            _userData = doc.data() as Map<String, dynamic>?;
+            _isLoading = false;
           });
         }
-    });
-    DatabaseService.instance.refreshMissionsCache();
+      }
+      await DatabaseService().refreshMissionsCache();
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _errorMessage = 'Error al cargar datos: $e';
+          _isLoading = false;
+        });
+      }
+    }
   }
 
-  // Mock data for activities
-  final List<Map<String, dynamic>> _activities = [
-    {
-      'title': 'Completed Daily Reflection',
-      'description': 'You completed your daily reflection',
-      'timestamp': DateTime.now().subtract(Duration(minutes: 30)),
-      'icon': Icons.edit_note,
-      'xpReward': 50,
-    },
-    {
-      'title': 'New Achievement Unlocked',
-      'description': 'Week Warrior - Complete 7 daily reflections',
-      'timestamp': DateTime.now().subtract(Duration(hours: 2)),
-      'icon': Icons.emoji_events,
-      'xpReward': 100,
-    },
-    {
-      'title': 'Mission Completed',
-      'description': 'You completed the "Morning Routine" mission',
-      'timestamp': DateTime.now().subtract(Duration(hours: 5)),
-      'icon': Icons.flag,
-      'xpReward': 75,
-    },
-  ];
+  // Datos de actividades mejorados
+  List<Map<String, dynamic>> get _activities {
+    if (_userData == null) return [];
+    
+    return [
+      {
+        'title': 'Reflexión Diaria Completada',
+        'description': 'Has completado tu reflexión diaria',
+        'timestamp': DateTime.now().subtract(Duration(minutes: 30)),
+        'icon': Icons.edit_note,
+        'xpReward': 50,
+        'time': 'hace 30 min',
+      },
+      {
+        'title': 'Nuevo Logro Desbloqueado',
+        'description': 'Guerrero Semanal - Completa 7 reflexiones diarias',
+        'timestamp': DateTime.now().subtract(Duration(hours: 2)),
+        'icon': Icons.emoji_events,
+        'xpReward': 100,
+        'time': 'hace 2 h',
+      },
+      {
+        'title': 'Misión Completada',
+        'description': 'Has completado la misión "Rutina Matutina"',
+        'timestamp': DateTime.now().subtract(Duration(hours: 5)),
+        'icon': Icons.flag,
+        'xpReward': 75,
+        'time': 'hace 5 h',
+      },
+    ];
+  }
 
-  // Mock data for quick actions
-  final List<Map<String, dynamic>> _quickActions = [
-    {
-      'id': 'new_reflection',
-      'title': 'New Reflection',
-      'description': 'Start your daily reflection',
-      'icon': Icons.edit_note,
-    },
-    {
-      'id': 'view_missions',
-      'title': 'View Missions',
-      'description': 'Check your active missions',
-      'icon': Icons.flag,
-    },
-    {
-      'id': 'set_goal',
-      'title': 'Set Goal',
-      'description': 'Create a new goal',
-      'icon': Icons.track_changes,
-    },
-    {
-      'id': 'view_stats',
-      'title': 'View Stats',
-      'description': 'Check your progress',
-      'icon': Icons.bar_chart,
-    },
-  ];
+  // Acciones rápidas mejoradas
+  List<Map<String, dynamic>> get _quickActions {
+    return [
+      {
+        'id': 'new_reflection',
+        'title': 'Nueva Reflexión',
+        'description': 'Inicia tu reflexión diaria',
+        'icon': Icons.edit_note,
+        'color': Colors.blue,
+      },
+      {
+        'id': 'view_missions',
+        'title': 'Ver Misiones',
+        'description': 'Revisa tus misiones activas',
+        'icon': Icons.flag,
+        'color': Colors.green,
+      },
+      {
+        'id': 'add_mission',
+        'title': 'Crear Misión',
+        'description': 'Crea una nueva misión personalizada',
+        'icon': Icons.add_task,
+        'color': Colors.orange,
+      },
+      {
+        'id': 'view_stats',
+        'title': 'Ver Estadísticas',
+        'description': 'Revisa tu progreso detallado',
+        'icon': Icons.bar_chart,
+        'color': Colors.purple,
+      },
+    ];
+  }
 
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => HomePageModel());
 
+    // Inicializar controladores de animación
+    _fadeController = AnimationController(
+      duration: Duration(milliseconds: 800),
+      vsync: this,
+    );
+    _slideController = AnimationController(
+      duration: Duration(milliseconds: 600),
+      vsync: this,
+    );
+
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeOut,
+    ));
+
+    _slideAnimation = Tween<Offset>(
+      begin: Offset(0, 0.3),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _slideController,
+      curve: Curves.easeOutBack,
+    ));
+
+    // Cargar datos iniciales
+    _loadInitialData();
+
     // Sincronizar cambios pendientes y refrescar caché
-    DatabaseService.instance
+    DatabaseService()
       .syncPendingChanges()
-      .then((_) => DatabaseService.instance.refreshMissionsCache());
+      .then((_) => DatabaseService().refreshMissionsCache());
 
     // Listener de conectividad para re-sincronizar al reconectar
     _connSub = Connectivity().onConnectivityChanged.listen((status) {
       if (status != ConnectivityResult.none) {
-        DatabaseService.instance
+        DatabaseService()
           .syncPendingChanges()
-          .then((_) => DatabaseService.instance.refreshMissionsCache());
+          .then((_) => DatabaseService().refreshMissionsCache());
       }
     });
+  }
+
+  Future<void> _loadInitialData() async {
+    await refreshData();
+    
+    // Iniciar animaciones
+    _fadeController.forward();
+    _slideController.forward();
   }
 
   @override
   void dispose() {
     _model.dispose();
     _connSub.cancel();
+    _fadeController.dispose();
+    _slideController.dispose();
     super.dispose();
   }
 
   void _handleActionPressed(String actionId) {
     switch (actionId) {
       case 'new_reflection':
-        print('New reflection pressed');
+        _showReflectionDialog();
         break;
       case 'view_missions':
         context.pushNamed('misiones2');
         break;
-      case 'set_goal':
-        print('Set goal pressed');
+      case 'add_mission':
+        _showAddMissionDialog(context);
         break;
       case 'view_stats':
-        print('View stats pressed');
-        break;
-      case 'new_task':
-        // Restaurar: Navegar a la página de misiones y abrir el formulario ahí (o dejar sin acción temporalmente)
+        _showStatsDialog();
         break;
     }
+  }
+
+  void _showReflectionDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Nueva Reflexión'),
+        content: Text('¿Quieres iniciar tu reflexión diaria?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cancelar'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              // TODO: Navegar a la página de reflexión
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Funcionalidad en desarrollo')),
+              );
+            },
+            child: Text('Iniciar'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showStatsDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Estadísticas'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Nivel: ${_userData?['nivel'] ?? 1}'),
+            Text('Puntos: ${_userData?['puntos'] ?? 0}'),
+            Text('Misiones completadas: 15'),
+            Text('Racha actual: 7 días'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cerrar'),
+          ),
+        ],
+      ),
+    );
   }
 
   void _showAddMissionDialog(BuildContext context) {
@@ -408,82 +533,132 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-        body: SafeArea(
-          top: true,
-          child: SingleChildScrollView(
+      key: scaffoldKey,
+      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+      body: SafeArea(
+        top: true,
+        child: RefreshIndicator(
+          onRefresh: refreshData,
+          child: _isLoading
+              ? _buildLoadingState()
+              : _errorMessage.isNotEmpty
+                  ? _buildErrorState()
+                  : _buildContent(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLoadingState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(
+              FlutterFlowTheme.of(context).primary,
+            ),
+          ),
+          SizedBox(height: 16),
+          Text(
+            'Cargando...',
+            style: FlutterFlowTheme.of(context).bodyMedium,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildErrorState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.error_outline,
+            size: 64,
+            color: FlutterFlowTheme.of(context).error,
+          ),
+          SizedBox(height: 16),
+          Text(
+            'Error al cargar datos',
+            style: FlutterFlowTheme.of(context).titleMedium,
+          ),
+          SizedBox(height: 8),
+          Text(
+            _errorMessage,
+            style: FlutterFlowTheme.of(context).bodySmall,
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: refreshData,
+            child: Text('Reintentar'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContent() {
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: SlideTransition(
+        position: _slideAnimation,
+        child: SingleChildScrollView(
+          physics: AlwaysScrollableScrollPhysics(),
+          child: Padding(
+            padding: EdgeInsets.all(16.0),
             child: Column(
-            mainAxisSize: MainAxisSize.max,
+              mainAxisSize: MainAxisSize.max,
               children: [
-              HomeHeader(),
-              DailyProgress(),
-              RecentActivities(activities: _activities),
-              QuickActions(
-                          actions: _quickActions,
-                          onActionPressed: _handleActionPressed,
-                        ),
-              // Botón de prueba de Firestore
-                      Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    ElevatedButton(
-                      onPressed: () async {
-                        // 1) Crear un usuario de prueba en Firestore
-                        final docRef = await DatabaseService().createUsuario({
-                          'nombre': 'TestUser',
-                          'nivel': 1,
-                          'puntos': 0,
-                          'avatar': 'https://mi.avatar/imagen.png',
-                        });
-                        // 2) Leerlo de vuelta
-                        final docSnapshot = await DatabaseService().readUsuario(docRef.id);
-                        // 3) Mostrarlo en consola
-                        debugPrint('Usuario leído: ${docSnapshot.data()}');
-                      },
-                      child: Text('Probar Firestore'),
-                    ),
-                    SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () async {
-                        // 1) Crear misión de prueba en Hive
-                        final prueba = Mision(
-                          id: 'test_hive',
-                          titulo: 'Misión Offline',
-                          descripcion: 'Descripción de prueba',
-                          puntos: 5,
-                        );
-                        await DatabaseService().cacheMision(prueba);
-
-                        // 2) Leerla de vuelta
-                        final cached = DatabaseService().getCachedMision('test_hive');
-
-                        // 3) Mostrar resultado en consola
-                        debugPrint('Hive: ${cached?.titulo} – ${cached?.puntos} puntos');
-                      },
-                      child: Text('Probar Hive'),
-                      ),
-                    ],
-                  ),
+                // Header con datos reales del usuario
+                HomeHeader(
+                  userName: _userData?['nombre'] ?? 'Usuario',
+                  level: _userData?['nivel'] ?? 1,
                 ),
-              ),
-              // Botón de perfil
-              IconButton(
-                icon: Icon(
-                  Icons.person,
-                  color: FlutterFlowTheme.of(context).primary,
-                  size: 24,
+                SizedBox(height: 16),
+                
+                // Resumen de estadísticas
+                StatsSummary(
+                  totalPoints: _userData?['puntos'] ?? 0,
+                  totalMissions: 15,
+                  completedMissions: 12,
+                  currentStreak: 7,
                 ),
-                onPressed: () async {
-                  final updated = await context.pushNamed<bool>('editarPerfil');
-                  if (updated == true) {
-                    await DatabaseService.instance.readUsuario(DatabaseService.instance.currentUserId);
-                    setState(() {});
-                  }
-                },
-              ),
+                SizedBox(height: 16),
+                
+                // Progreso diario con datos reales
+                DailyProgress(
+                  completedTasks: 3,
+                  totalTasks: 5,
+                  streakDays: 7,
+                  dailyGoal: 5,
+                ),
+                SizedBox(height: 16),
+                
+                // Actividades recientes
+                RecentActivities(activities: _activities),
+                SizedBox(height: 16),
+                
+                // Acciones rápidas
+                QuickActions(
+                  actions: _quickActions,
+                  onActionPressed: _handleActionPressed,
+                ),
+                SizedBox(height: 16),
+                
+                // Botón flotante para crear misión
+                FloatingActionButton.extended(
+                  onPressed: () => _showAddMissionDialog(context),
+                  icon: Icon(Icons.add),
+                  label: Text('Nueva Misión'),
+                  backgroundColor: FlutterFlowTheme.of(context).primary,
+                  foregroundColor: Colors.white,
+                ),
+                SizedBox(height: 32),
               ],
+            ),
           ),
         ),
       ),

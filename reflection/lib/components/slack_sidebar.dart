@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import '../flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '/services/database_service.dart';
 
 class SlackSidebar extends StatefulWidget {
-  final int selectedIndex;
   final List<dynamic> destinations;
-  final ValueChanged<int> onItemSelected;
+  final int selectedIndex;
+  final Function(int) onItemSelected;
 
   const SlackSidebar({
     Key? key,
-    required this.selectedIndex,
     required this.destinations,
+    required this.selectedIndex,
     required this.onItemSelected,
   }) : super(key: key);
 
@@ -19,6 +21,63 @@ class SlackSidebar extends StatefulWidget {
 
 class _SlackSidebarState extends State<SlackSidebar> {
   bool _expanded = true;
+  Map<String, dynamic>? _userData;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    try {
+      final userId = FirebaseAuth.instance.currentUser?.uid;
+      if (userId != null) {
+        final doc = await DatabaseService().readUsuario(userId);
+        if (mounted) {
+          setState(() {
+            _userData = doc.data() as Map<String, dynamic>?;
+            _isLoading = false;
+          });
+        }
+        
+        // Si no hay datos del usuario, crear un usuario de prueba
+        if (_userData == null) {
+          await _createTestUser(userId);
+        }
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _createTestUser(String userId) async {
+    try {
+      await DatabaseService().updateUsuario(userId, {
+        'nombre': 'Usuario',
+        'descripcion': 'Bienvenido a Reflection',
+        'nivel': 1,
+        'puntos': 0,
+        'avatar': 'assets/images/reflection_icon_clean.png',
+        'fechaCreacion': DateTime.now().toIso8601String(),
+        'ultimaActividad': DateTime.now().toIso8601String(),
+      });
+      
+      // Recargar datos después de crear el usuario
+      await _loadUserData();
+    } catch (e) {
+      print('Error al crear usuario de prueba: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +154,7 @@ class _SlackSidebarState extends State<SlackSidebar> {
                 final item = widget.destinations[i];
                 final selected = widget.selectedIndex == i;
                 return Tooltip(
-                  message: item.label,
+                  message: item.tooltip ?? item.label,
                   textStyle: theme.bodySmall.copyWith(fontFamily: 'VT323', fontSize: 16, color: theme.primaryText),
                   waitDuration: const Duration(milliseconds: 400),
                   child: InkWell(
@@ -160,25 +219,21 @@ class _SlackSidebarState extends State<SlackSidebar> {
             padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 12),
             child: _expanded
                 ? Row(
-                    mainAxisSize: MainAxisSize.max,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      CircleAvatar(
-                        radius: 20,
-                        backgroundImage: AssetImage('assets/images/me.jpg'),
-                      ),
-                      SizedBox(width: 12),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              'John Doe',
+                              _userData?['nombre'] ?? 'Usuario',
                               style: theme.labelLarge.copyWith(color: theme.primary, fontSize: 15),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                             ),
                             Text(
-                              'Nivel 7',
+                              'Nivel ${_userData?['nivel'] ?? 1}',
                               style: theme.labelSmall.copyWith(color: theme.secondaryText, fontSize: 13),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
@@ -193,30 +248,14 @@ class _SlackSidebarState extends State<SlackSidebar> {
                       ),
                     ],
                   )
-                : Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      CircleAvatar(
-                        radius: 20,
-                        backgroundImage: AssetImage('assets/images/me.jpg'),
-                      ),
-                      const SizedBox(height: 8),
-                      IconButton(
-                        icon: Icon(Icons.logout, color: theme.secondaryText, size: 20),
-                        tooltip: 'Cerrar sesión',
-                        onPressed: () {},
-                      ),
-                    ],
+                : IconButton(
+                    icon: Icon(Icons.logout, color: theme.secondaryText, size: 20),
+                    tooltip: 'Cerrar sesión',
+                    onPressed: () {},
                   ),
           ),
         ],
       ),
     );
   }
-}
-
-class _SidebarItem {
-  final IconData icon;
-  final String label;
-  const _SidebarItem({required this.icon, required this.label});
 } 

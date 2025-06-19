@@ -3,7 +3,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
-class DailyProgress extends StatelessWidget {
+class DailyProgress extends StatefulWidget {
   final int completedTasks;
   final int totalTasks;
   final int streakDays;
@@ -18,24 +18,71 @@ class DailyProgress extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final progress = completedTasks / totalTasks;
-    final goalProgress = completedTasks / dailyGoal;
+  State<DailyProgress> createState() => _DailyProgressState();
+}
 
+class _DailyProgressState extends State<DailyProgress> with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _progressAnimation;
+  late Animation<double> _goalAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: Duration(milliseconds: 1500),
+      vsync: this,
+    );
+
+    _progressAnimation = Tween<double>(
+      begin: 0.0,
+      end: widget.completedTasks / widget.totalTasks,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeOutCubic,
+    ));
+
+    _goalAnimation = Tween<double>(
+      begin: 0.0,
+      end: widget.completedTasks / widget.dailyGoal,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeOutCubic,
+    ));
+
+    _animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: FlutterFlowTheme.of(context).secondaryBackground,
-        borderRadius: BorderRadius.circular(16.0),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            FlutterFlowTheme.of(context).secondaryBackground,
+            FlutterFlowTheme.of(context).secondaryBackground.withOpacity(0.8),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(20.0),
         border: Border.all(
           color: FlutterFlowTheme.of(context).primary,
           width: 2.0,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
+            spreadRadius: 0,
           ),
         ],
       ),
@@ -45,25 +92,72 @@ class DailyProgress extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              mainAxisSize: MainAxisSize.max,
               children: [
-                Icon(Icons.show_chart, size: 28),
+                Icon(
+                  Icons.show_chart,
+                  color: FlutterFlowTheme.of(context).primary,
+                  size: 28,
+                ),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    'Progreso diario',
-                    style: Theme.of(context).textTheme.titleMedium,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
+                    'Progreso Diario',
+                    style: FlutterFlowTheme.of(context).titleLarge.override(
+                          font: GoogleFonts.pressStart2p(
+                            fontWeight: FontWeight.bold,
+                            fontStyle: FlutterFlowTheme.of(context).titleLarge.fontStyle,
+                          ),
+                          color: FlutterFlowTheme.of(context).primaryText,
+                          fontSize: 18.0,
+                          letterSpacing: 0.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                ),
+                // Racha de días
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: FlutterFlowTheme.of(context).warning.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: FlutterFlowTheme.of(context).warning.withOpacity(0.3),
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.local_fire_department,
+                        color: FlutterFlowTheme.of(context).warning,
+                        size: 16,
+                      ),
+                      SizedBox(width: 4),
+                      Text(
+                        '${widget.streakDays} días',
+                        style: FlutterFlowTheme.of(context).bodySmall.override(
+                              font: GoogleFonts.pressStart2p(
+                                fontWeight: FontWeight.w600,
+                                fontStyle: FlutterFlowTheme.of(context).bodySmall.fontStyle,
+                              ),
+                              color: FlutterFlowTheme.of(context).warning,
+                              fontSize: 12.0,
+                              letterSpacing: 0.0,
+                              fontWeight: FontWeight.w600,
+                            ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 24),
-            TweenAnimationBuilder<double>(
-              tween: Tween(begin: 0, end: progress),
-              duration: const Duration(milliseconds: 1000),
-              builder: (context, value, child) {
+            
+            // Progreso de tareas
+            AnimatedBuilder(
+              animation: _progressAnimation,
+              builder: (context, child) {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -84,7 +178,7 @@ class DailyProgress extends StatelessWidget {
                               ),
                         ),
                         Text(
-                          '$completedTasks/$totalTasks',
+                          '${widget.completedTasks}/${widget.totalTasks}',
                           style: FlutterFlowTheme.of(context).bodyMedium.override(
                                 font: GoogleFonts.pressStart2p(
                                   fontWeight: FontWeight.w600,
@@ -101,23 +195,25 @@ class DailyProgress extends StatelessWidget {
                     const SizedBox(height: 8),
                     LinearPercentIndicator(
                       padding: EdgeInsets.zero,
-                      lineHeight: 8.0,
-                      percent: value,
+                      lineHeight: 10.0,
+                      percent: _progressAnimation.value,
                       backgroundColor: FlutterFlowTheme.of(context).accent1,
                       progressColor: FlutterFlowTheme.of(context).primary,
-                      barRadius: const Radius.circular(4),
-                      animation: true,
-                      animateFromLastPercent: true,
+                      barRadius: const Radius.circular(5),
+                      animation: false,
+                      animateFromLastPercent: false,
                     ),
                   ],
                 );
               },
             ),
+            
             const SizedBox(height: 24),
-            TweenAnimationBuilder<double>(
-              tween: Tween(begin: 0, end: goalProgress),
-              duration: const Duration(milliseconds: 1000),
-              builder: (context, value, child) {
+            
+            // Meta diaria
+            AnimatedBuilder(
+              animation: _goalAnimation,
+              builder: (context, child) {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -138,7 +234,7 @@ class DailyProgress extends StatelessWidget {
                               ),
                         ),
                         Text(
-                          '$completedTasks/$dailyGoal',
+                          '${widget.completedTasks}/${widget.dailyGoal}',
                           style: FlutterFlowTheme.of(context).bodyMedium.override(
                                 font: GoogleFonts.pressStart2p(
                                   fontWeight: FontWeight.w600,
@@ -155,20 +251,107 @@ class DailyProgress extends StatelessWidget {
                     const SizedBox(height: 8),
                     LinearPercentIndicator(
                       padding: EdgeInsets.zero,
-                      lineHeight: 8.0,
-                      percent: value,
+                      lineHeight: 10.0,
+                      percent: _goalAnimation.value,
                       backgroundColor: FlutterFlowTheme.of(context).accent1,
                       progressColor: FlutterFlowTheme.of(context).success,
-                      barRadius: const Radius.circular(4),
-                      animation: true,
-                      animateFromLastPercent: true,
+                      barRadius: const Radius.circular(5),
+                      animation: false,
+                      animateFromLastPercent: false,
                     ),
                   ],
                 );
               },
             ),
+            
+            const SizedBox(height: 20),
+            
+            // Estadísticas adicionales
+            Row(
+              children: [
+                Expanded(
+                  child: _buildStatCard(
+                    context,
+                    'Completadas',
+                    '${widget.completedTasks}',
+                    Icons.check_circle,
+                    FlutterFlowTheme.of(context).success,
+                  ),
+                ),
+                SizedBox(width: 12),
+                Expanded(
+                  child: _buildStatCard(
+                    context,
+                    'Pendientes',
+                    '${widget.totalTasks - widget.completedTasks}',
+                    Icons.pending,
+                    FlutterFlowTheme.of(context).warning,
+                  ),
+                ),
+                SizedBox(width: 12),
+                Expanded(
+                  child: _buildStatCard(
+                    context,
+                    'Porcentaje',
+                    '${((widget.completedTasks / widget.totalTasks) * 100).round()}%',
+                    Icons.percent,
+                    FlutterFlowTheme.of(context).primary,
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildStatCard(BuildContext context, String label, String value, IconData icon, Color color) {
+    return Container(
+      padding: EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: color.withOpacity(0.3),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        children: [
+          Icon(
+            icon,
+            color: color,
+            size: 20,
+          ),
+          SizedBox(height: 4),
+          Text(
+            value,
+            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                  font: GoogleFonts.pressStart2p(
+                    fontWeight: FontWeight.w600,
+                    fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                  ),
+                  color: color,
+                  fontSize: 14.0,
+                  letterSpacing: 0.0,
+                  fontWeight: FontWeight.w600,
+                ),
+          ),
+          Text(
+            label,
+            style: FlutterFlowTheme.of(context).bodySmall.override(
+                  font: GoogleFonts.pressStart2p(
+                    fontWeight: FontWeight.w500,
+                    fontStyle: FlutterFlowTheme.of(context).bodySmall.fontStyle,
+                  ),
+                  color: FlutterFlowTheme.of(context).secondaryText,
+                  fontSize: 10.0,
+                  letterSpacing: 0.0,
+                  fontWeight: FontWeight.w500,
+                ),
+          ),
+        ],
       ),
     );
   }

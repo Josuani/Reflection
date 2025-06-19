@@ -47,7 +47,6 @@ class _PerfilWidgetState extends State<PerfilWidget> {
   int xpToNextLevel = 1500;
   bool notificationsEnabled = true;
   bool darkModeEnabled = false;
-  File? avatarFile;
 
   // Mock data for achievements
   final List<Map<String, dynamic>> _achievements = [
@@ -121,16 +120,6 @@ class _PerfilWidgetState extends State<PerfilWidget> {
     );
   }
 
-  Future<void> _pickAvatar() async {
-    final picker = ImagePicker();
-    final picked = await picker.pickImage(source: ImageSource.gallery);
-    if (picked != null) {
-      setState(() {
-        avatarFile = File(picked.path);
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = FlutterFlowTheme.of(context);
@@ -195,60 +184,39 @@ class _PerfilWidgetState extends State<PerfilWidget> {
                             ),
                           ],
                         ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Stack(
-                              children: [
-                                CircleAvatar(
-                                  radius: 44,
-                                  backgroundImage: avatarFile != null
-                                      ? FileImage(avatarFile!)
-                                      : const AssetImage('assets/images/me.jpg') as ImageProvider,
+                            Text(
+                              userName,
+                              style: theme.headlineMedium.override(
+                                font: GoogleFonts.pressStart2p(
+                                  fontWeight: FontWeight.bold,
+                                  fontStyle: theme.headlineMedium.fontStyle,
                                 ),
-                                Positioned(
-                                  bottom: 0,
-                                  right: 0,
-                                  child: GestureDetector(
-                                    onTap: _pickAvatar,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: theme.primary,
-                                        shape: BoxShape.circle,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black26,
-                                            blurRadius: 4,
-                                          ),
-                                        ],
-                                      ),
-                                      padding: const EdgeInsets.all(6),
-                                      child: Icon(Icons.edit, size: 18, color: theme.info),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(width: 16),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    userName,
-                                    style: theme.headlineMedium.copyWith(
-                                      color: theme.primary,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    userMotto,
-                                    style: theme.bodyMedium.copyWith(
-                                      color: theme.secondaryText,
-                                    ),
-                                  ),
-                                ],
+                                color: theme.primaryText,
+                                fontSize: 24.0,
+                                letterSpacing: 0.0,
+                                fontWeight: FontWeight.bold,
                               ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Nivel ${userData?['nivel'] ?? 1}',
+                              style: theme.bodyMedium.override(
+                                font: GoogleFonts.pressStart2p(
+                                  fontWeight: FontWeight.w500,
+                                  fontStyle: theme.bodyMedium.fontStyle,
+                                ),
+                                color: theme.secondaryText,
+                                fontSize: 14.0,
+                                letterSpacing: 0.0,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
                             ),
                           ],
                         ),

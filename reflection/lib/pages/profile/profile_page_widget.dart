@@ -107,19 +107,17 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                         width: 120,
                         height: 120,
                         decoration: BoxDecoration(
+                          color: FlutterFlowTheme.of(context).primary.withOpacity(0.1),
                           shape: BoxShape.circle,
                           border: Border.all(
                             color: FlutterFlowTheme.of(context).primary,
                             width: 2,
                           ),
                         ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(60),
-                          child: buildImage(
-                            filePath: currentUser.avatarLocalPath,
-                            networkUrl: currentUser.avatarUrl,
-                            assetPath: 'assets/images/placeholder.png',
-                          ),
+                        child: Icon(
+                          Icons.person,
+                          color: FlutterFlowTheme.of(context).primary,
+                          size: 60,
                         ),
                       ),
                     ),

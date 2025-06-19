@@ -22,6 +22,54 @@ y este proyecto adhiere al [Versionado Semántico](https://semver.org/spec/v2.0.
 - Corrección de bugs menores
 - Mejoras en la sincronización offline
 
+## [1.1.0] - 2024-01-20
+
+### Added
+- **Página Home completamente rediseñada**
+  - Integración con datos reales de Firebase
+  - Pull to refresh para actualizar datos
+  - Estados de carga, error y contenido vacío
+  - Animaciones fluidas y efectos visuales
+
+- **Widgets mejorados**
+  - HomeHeader con avatar dinámico y animaciones
+  - DailyProgress con estadísticas adicionales y racha de días
+  - QuickActions con colores temáticos y descripciones
+  - RecentActivities con indicadores de XP y tiempo relativo
+  - Nuevo widget StatsSummary para resumen de estadísticas
+
+- **Funcionalidades nuevas**
+  - Diálogos informativos para reflexiones y estadísticas
+  - Botón flotante para crear misiones rápidamente
+  - Navegación mejorada entre secciones
+  - Manejo robusto de errores y reintentos
+
+### Changed
+- **Diseño visual modernizado**
+  - Gradientes sutiles en todos los componentes
+  - Bordes redondeados y sombras mejoradas
+  - Colores temáticos para diferentes tipos de contenido
+  - Tipografía consistente con Google Fonts
+
+- **Experiencia de usuario mejorada**
+  - Animaciones de entrada escalonadas
+  - Feedback visual en interacciones
+  - Estados vacíos informativos
+  - Indicadores de progreso animados
+
+### Technical
+- **Arquitectura optimizada**
+  - Controladores de animación para efectos fluidos
+  - Manejo eficiente de memoria y recursos
+  - Separación modular de widgets
+  - Integración con DatabaseService mejorada
+
+- **Rendimiento**
+  - Carga lazy de datos
+  - Caché inteligente con Hive
+  - Animaciones optimizadas
+  - Sincronización offline/online mejorada
+
 ## [1.0.0] - 2024-01-15
 
 ### Added

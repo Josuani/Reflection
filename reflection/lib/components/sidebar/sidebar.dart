@@ -111,35 +111,16 @@ class _SidebarState extends State<Sidebar> with SingleTickerProviderStateMixin {
                 child: model.isExpanded && _widthAnimation.value > 150
                     ? SidebarProfile(
                         isExpanded: true,
-                        profileImagePath: 'assets/images/me.jpg',
                         userName: 'My Account',
                         userEmail: 'user@example.com',
                       )
-                    : Center(
-                        child: Container(
-                          width: 52.0,
-                          height: 52.0,
-                          decoration: BoxDecoration(
-                            color: Color(0xFFF2F2F2),
-                            shape: BoxShape.circle,
-                          ),
-                          alignment: AlignmentDirectional(0.0, 0.0),
-                          child: Padding(
-                            padding: EdgeInsets.all(2.0),
-                            child: Container(
-                              width: 48.0,
-                              height: 48.0,
-                              clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                              ),
-                              child: Image.asset(
-                                'assets/images/me.jpg',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
+                    : IconButton(
+                        icon: Icon(
+                          Icons.logout,
+                          color: FlutterFlowTheme.of(context).secondaryText,
+                          size: 20,
                         ),
+                        onPressed: () {},
                       ),
               ),
 
